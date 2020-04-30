@@ -1,0 +1,33 @@
+<template id="article-item">
+    {% verbatim vue4 %}
+    <div :data="articleList">
+        <div class="box mb-3 shadow-sm border rounded bg-white osahan-post">
+            <div class="p-3 d-flex align-items-center border-bottom osahan-post-header">
+                <div class="dropdown-list-image mr-3">
+                    <img alt="" class="rounded-circle" src="#">
+                    <div class="status-indicator bg-success"></div>
+                </div>
+                <div class="font-weight-bold">
+                    <div class="text-truncate">USERNAME</div>
+                    <div class="small text-gray-500">PhoneNum</div>
+                </div>
+                <span class="ml-auto small">TimeStamp</span>
+            </div>
+            <div class="p-3 border-bottom osahan-post-body">
+                <p><template slot-scope="slot">{{ slot.row.pk }}</template></p>
+            </div>
+            <div class="p-3 osahan-post-footer">
+                <a href="#" class="mr-3 text-secondary"><i
+                        class="feather-heart text-danger"></i>1
+                </a>
+                <a href="#" data-toggle="modal" data-target="#"
+                   class="mr-3 text-secondary"><i
+                        class="feather-message-square"></i>2
+                </a>
+                <a href="#" class=" mr-3 text-secondary"><i class="feather-share-2"></i>2</a>
+            </div>
+        </div>
+    </div>
+{% endverbatim vue4 %}
+</template>
+

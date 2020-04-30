@@ -1,0 +1,42 @@
+<form action="/api/articles/create/" method="POST">{% csrf_token %}
+    <div class="box shadow-sm border rounded bg-white mb-3 osahan-share-post">
+        <input type="hidden" name="user" value="{{ request.user.id }}">
+        <ul class="nav nav-justified border-bottom osahan-line-tab" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                   aria-controls="contact" aria-selected="false"><i class="feather-clipboard"></i> 发布微博</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                   aria-controls="profile" aria-selected="false"><i class="feather-image"></i>上传图片</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane show active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="p-3 w-100">
+                    <textarea placeholder="你的想法..." class="form-control border-0 p-0 shadow-none"
+                              rows="4"
+                              name="content"></textarea>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="p-3 w-100 text-center">
+                    <!--//TODO 改成上传图片-->
+                    <a href="">
+                        <input type="file" accept="images/*" class=" form-control  shadow-none border-0 p-0">
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <div class="border-top p-3 d-flex align-items-center">
+            <div class="mr-auto"><a href="#" class="text-link small"><i class="feather-tag"></i> 添加tag</a>
+            </div>
+            <div class="flex-shrink-1">
+                <button type="submit"
+                        {% if not request.user.is_authenticated %}disabled{% endif %}
+                        class="btn btn-primary btn-sm">&emsp;发布&emsp;</button>
+            </div>
+        </div>
+    </div>
+</form>

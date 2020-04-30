@@ -1,0 +1,108 @@
+{% extends 'base_index.html' %}
+{% load static %}
+{% block title %}
+Home
+{% endblock %}
+{% block main_content %}
+    {% include 'components/post_form.html' %}
+    {% verbatim vue4 %}
+        <div v-for="article in articleList">
+            <div class="box mb-3 shadow-sm border rounded bg-white osahan-post">
+                <div class="p-3 d-flex align-items-center border-bottom osahan-post-header">
+                    <div class="dropdown-list-image mr-3">
+                        <img alt="" class="rounded-circle" src="#">
+                        <div class="status-indicator bg-success"></div>
+                    </div>
+                    <div class="font-weight-bold">
+                        <div class="text-truncate">{{ article.author_name }}</div>
+                        <div class="small text-gray-500">PhoneNum</div>
+                    </div>
+                    <span class="ml-auto small">{{ article.timestamp }}</span>
+                </div>
+                <div class="p-3 border-bottom osahan-post-body">
+                    <p>{{ article.content }}</p>
+                </div>
+                <div class="p-3 osahan-post-footer">
+                    <a href="javascript:void(0)" @click.prevent="handleActions(article.id,'like')"
+                       class="mr-3 text-secondary"><i
+                            class="feather-heart text-danger"></i>{{ article.likes_count }}Likes
+                    </a>
+                    <a href="javascript:void(0)" @click.prevent="handleActions(article.id,'unlike')"
+                       class="mr-3 text-secondary"><i
+                            class="feather-heart text-danger"></i>Unlike
+                    </a>
+                    <a href="javascript:void(0)" data-toggle="modal" data-target="#"
+                       class="mr-3 text-secondary"><i
+                            class="feather-message-square"></i>{{ article.comment_count }}
+                    </a>
+                    <a href="javascript:void(0)" @click.prevent="handleActions(article.id,'retweet')"
+                       class=" mr-3 text-secondary"><i class="feather-share-2"></i>Share</a>
+                </div>
+            </div>
+        </div>
+    {% endverbatim vue4 %}
+{% endblock %}
+
+{% block aside_content %}
+    {% include 'components/user_aside.html' %}
+{% endblock %}
+
+{% block mytemplate %}
+    <template id="aaax">
+        <h1>Child msg |{% verbatim vue5 %}{{ contentx }}{% endverbatim vue5 %}</h1>
+    </template>
+{% endblock %}
+
+{% block myjs %}
+    <script>
+
+        const app = new Vue({
+            el: '#post',
+            data: {
+                articleList: [],
+                msg: ''
+            },
+            mounted() {
+                this.loadArticles()
+            },
+            methods: {
+                loadArticles: function () {
+                    let that = this;
+                    axios.get("api/articles/").then(response => {
+                        that.articleList = response.data;
+                    }, err => {
+                        that.msg = err.data
+                    });
+                },
+                handleActions: function (aid, action) {
+                    let csrf_token = this.getCookie('csrftoken');
+                    let data = JSON.stringify({id: aid, action: action});
+                    axios.post("api/articles/action/", data, {
+                        headers: {
+                            "X-CSRFToken": csrf_token,
+                            "HTTP_X_REQUESTED_WITH": "XMLHttpRequest",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "Content-Type": "application/json"
+                        }
+                    }).then(response => {
+                        if (response.status === 200) {
+                            this.loadArticles()
+                        }
+                    })
+                },
+                getCookie: function (cname) {
+                    let name = cname + "=";
+                    let ca = document.cookie.split(";");
+                    for (let i = 0; i < ca.length; i++) {
+                        let c = ca[i];
+                        while (c.charAt(0) === ' ') c = c.substring(1);
+                        if (c.indexOf(name) !== -1) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                },
+            }
+        })
+    </script>
+{% endblock %}
