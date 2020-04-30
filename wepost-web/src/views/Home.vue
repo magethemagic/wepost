@@ -12,10 +12,10 @@
               :key="article.id"
               :article="article"
             ></PostItem>
-            <div class="infinite-scroll" v-show="loading">
-              <b-spinner type="border" small></b-spinner>
-              <span class="infinite-scroll-text">Loading...</span>
-            </div>
+            <b-button variant="primary" :disabled="!required" class="infinite-scroll" @click="loadArticle">
+              <b-spinner type="border" v-show="required" small></b-spinner>
+              <span class="infinite-scroll-text">{{tips}}</span>
+            </b-button>
           </main>
           <!--左边栏//TODO-->
           <aside class="col col-xl-3 order-xl-1 col-lg-6 order-lg-2 col-md-6 col-sm-6 col-12">
@@ -45,13 +45,12 @@ export default {
       page: 1,
       articleList: [],
       errmsg: "",
-      loading:false,
+      tips:'Loading...',
       required:true
     };
   },
   mounted() {
     this.loadArticle();
-    window.addEventListener('scroll', this.scrollBottom,false)
   },
   methods: {
     loadArticle: async function() {
@@ -72,6 +71,10 @@ export default {
             that.page += 1;
           },
           error => {
+            if(error.status === 404){
+              that.tips = '没有更多了'
+              that.required = false
+            }
             that.errmsg = error;
           }
         );
@@ -81,38 +84,6 @@ export default {
     },
     linkGen(pageNum) {
       return pageNum === 1 ? "?" : `?page=${pageNum}`;
-    },
-    scrollBottom(){
-       if (document.body.scrollTop + window.innerHeight >= document.body.offsetHeight && this.required){
-         console.log('loading');
-
-         this.loading = true;
-         this.required = false;
-         this.$axios
-        .get("/articles/", {
-          params: {
-            page: this.page
-          }
-        })
-        .then(
-          response => {
-            if (that.articleList.length > 0) {
-              that.articleList = that.articleList.concat(response.data);
-            } else {
-              that.articleList = response.data;
-            }
-            that.page += 1;
-            this.loading = false;
-            this.required = true;
-          },
-          error => {
-            that.errmsg = error;
-            this.required = true;
-          }
-        );
-
-       }
-
     }
   }
 };
