@@ -45,7 +45,7 @@ export default {
       page: 1,
       articleList: [],
       errmsg: "",
-      tips:'Loading...',
+      tips:'Click to load more',
       required:true
     };
   },
