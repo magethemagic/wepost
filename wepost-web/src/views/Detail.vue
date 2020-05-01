@@ -1,29 +1,34 @@
 <template>
-  <div class="detail-view">
+  <div class="detail-view container">
     <p>aid:{{aid}}</p>
+    <PostItem :article="article"></PostItem>
   </div>
 </template>
 
 <script>
+import PostItem from '@/components/PostItem.vue'
+
 export default {
   name:'Detail',
+  components:{
+    PostItem
+  },
   data(){
     return{
       aid: 0,
-      article:Object,
+      article:[],
       user:Object,
       msg:''
     }
   },
   mounted(){
-    console.log(this.$route.query.aid);
-
     this.aid = this.$route.query.aid
+    this.getDetail(this.aid)
   },
   methods:{
     getDetail(aid){
       let self = this;
-      this.$axios.get('/aip/articles/'+aid+'/').then(response=>{
+      this.$axios.get('/articles/'+aid+'/').then(response=>{
         self.article = response.data;
       },error=>{
         self.msg = error.data

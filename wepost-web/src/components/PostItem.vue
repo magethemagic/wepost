@@ -1,6 +1,6 @@
 <template>
   <div class="post-item">
-    <b-card header-tag="header" class="box mb-3 shadow-sm rounded bg-white text-left">
+    <b-card header-tag="header" class="box shadow-sm rounded bg-white text-left mt mt-3">
       <template v-slot:header>
         <div class="p-0 d-flex align-items-center">
           <b-avatar :text="article.author_name" variant="dark"></b-avatar>
@@ -13,7 +13,9 @@
           <span class="ml-auto small">{{article.timestamp | formatDate }}</span>
         </div>
       </template>
-      <b-card-text>{{article.content}}</b-card-text>
+      <b-card-text>{{article.content}}
+        <a href="javascript:void(0)" @click="handleTagClick(tag.id)"  v-for="tag in article.tags" :key="tag.id">#{{tag.name}}#</a>
+      </b-card-text>
 
       <b-card class="text-left font-weight-bold" v-if="article.parent != null">
         <b-card-text class="text-left bg-gray">
@@ -21,7 +23,11 @@
             href="#"
             @click.prevent="viewArticle(article.parent.id)"
           >@{{article.parent.author_name}}:</a>
-          {{article.parent.content}}
+          <a
+            href="#"
+            @click.prevent="viewArticle(article.parent.id)"
+          >
+          {{article.parent.content}}</a>
         </b-card-text>
       </b-card>
 
@@ -33,20 +39,19 @@
             class="mr-3 text-secondary"
           >
             <b-icon-heart></b-icon-heart>
-            {{likes_count}}
+            {{likes_count}}Likes
           </a>
-          <a href="#" data-toggle="modal" data-target="#" class="mr-3 text-secondary">
-            <b-icon-card-text></b-icon-card-text>2
+          <a href="javascript:void(0)" v-b-toggle="'my-toggle'+article.id" class="mr-3 text-secondary">
+            <b-icon-card-text></b-icon-card-text>Comment
           </a>
           <a
-            @click.prevent="toggleModal"
-            href="#"
-            :id="'toggle'+article.id"
+            href="javascript:void(0)"
+            v-b-modal="'my-modal'+article.id"
             class="mr-3 text-secondary"
           >
-            <b-icon-box-arrow-up-right></b-icon-box-arrow-up-right>2
+            <b-icon-box-arrow-up-right></b-icon-box-arrow-up-right>Share
           </a>
-          <b-modal :ref="'my-modal'+article.id" title="Retweet" @ok="handleClickAction(article.id,'retweet',content.length >0 ?content:'retweet' ,$event)">
+          <b-modal :id="'my-modal'+article.id" title="Retweet" @ok="handleClickAction(article.id,'retweet',content.length >0 ?content:'retweet' ,$event)">
             <b-textarea
             class="my-4"
             placeholder="retweet to..."
@@ -57,6 +62,25 @@
         </div>
       </template>
     </b-card>
+    <b-collapse :id="'my-toggle'+article.id">
+      <b-card class="mb mb-3 box shadow-sm">
+        <b-card-text class="text-left border-bottom"
+        v-for="comment in article.comments_article"
+        :key="comment.id">
+        <a href="javascript:void(0)">@{{comment.user_name}}:</a>
+        {{comment.content}}</b-card-text>
+        <b-form-textarea
+      v-model="comment_content"
+      placeholder="Post comment..."
+      rows="2"
+      no-resize
+      max-rows="4"
+    ></b-form-textarea>
+      <div class="mr-auto"></div>
+      <b-button :disabled="content.length >140" variant="primary" @click="submitComment">Post</b-button>
+      </b-card>
+
+    </b-collapse>
   </div>
 </template>
 
@@ -65,6 +89,7 @@ import { formatTimeToStr } from '@/utils/dateFormat.js'
 
 import moment from 'moment'
 moment.locale('zh/cn')
+
 export default {
   name: 'PostItem',
   props: {
@@ -76,11 +101,14 @@ export default {
       likes_count: Number,
       isLike: false,
       errmsg: '',
-      content:''
+      content:'',
+      comment_list:[],
+      comment_content:''
     }
   },
   mounted () {
     this.likes_count = this.article.likes_count
+    this.comment_list = this.article.comments_article
   },
   methods: {
     viewArticle: function (aid) {
@@ -103,10 +131,8 @@ export default {
           console.log(response)
           if (action === 'retweet') self.$emit('retweet', response.data)
           if (action === 'like' || action === 'unlike') {
-            self.likes_count = self.isLike
-              ? self.likes_count - 1
-              : self.likes_count + 1
-            self.isLike = !self.isLike
+            self.likes_count = response.data.likes_count
+            self.isLike = ! self.isLike
           }
         },
         error => {
@@ -114,10 +140,12 @@ export default {
         }
       )
     },
-    toggleModal(){
-      this.$refs['my-modal'+this.article.id].toggle("#")
+    handleTagClick(tid){
+      this.$router.push({path:'articles/search/?tid='+tid,props:(route)=>({
+        query: route.query.tid
+      })})
     }
-
+    //TODO 解决标签下划线问题
   },
   filters: {
     formatDate: function (time) {
@@ -149,6 +177,10 @@ li {
 }
 
 a {
-  color: #42b983;
+  color: #62acf1;
+}
+
+a:focus {
+  text-decoration: none;
 }
 </style>
