@@ -18,14 +18,9 @@
 
       <b-card class="text-left font-weight-bold" v-if="article.parent != null">
         <b-card-text class="text-left bg-gray">
-          <a
-            href="#"
-            @click.prevent="viewArticle(article.parent.id)"
-          >@{{article.parent.author_name}}:</a>
-          <a
-            href="#"
-            @click.prevent="viewArticle(article.parent.id)"
-          >
+          <a href="#" @click.prevent="viewArticle(article.parent.id)">
+            @{{article.parent.author_name}}:</a>
+          <a href="#" @click.prevent="viewArticle(article.parent.id)">
           {{article.parent.content}}</a>
         </b-card-text>
       </b-card>
@@ -188,9 +183,10 @@ li {
 
 a {
   color: #62acf1;
+  text-decoration: none;
 }
 
-a:focus {
+a:focus,a:hover {
   text-decoration: none;
 }
 </style>
