@@ -30,6 +30,7 @@ export default {
       const self = this
       this.$axios.get('/articles/' + aid + '/').then(response => {
         self.article = response.data
+
       }, error => {
         self.msg = error.data
       })
