@@ -8,7 +8,7 @@
       <router-link to="/user/login">Login</router-link>  |
       <router-link to="/user/register">Register</router-link>
     </div>
-    <router-view/>
+    <router-view v-if="RouterState"/>
   </div>
 </template>
 
@@ -17,22 +17,32 @@ import NavBar from '@/components/NavBar.vue'
 
 export default {
   name: 'App',
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
   components: {
     NavBar
   },
   data () {
     return {
-
+      RouterState:true
     }
   },
   watch: {
-    $route (to) {
-      if(to.path ==='/') location.reload()
+    $route (to,from) {
+      if (to.path === '/') location.reload()
       if (to.path === '/user/login' && this.$store.getters.getIsLogin) this.$router.push('/')
     }
   },
   methods: {
-
+    reload(){
+      this.RouterState = false
+      this.$nextTick(()=>{
+        this.RouterState = true
+      })
+    }
   }
 }
 </script>

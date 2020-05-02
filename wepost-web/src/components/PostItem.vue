@@ -6,8 +6,7 @@
           <b-avatar :text="article.author_name" variant="dark"></b-avatar>
           <div class="font-weight-bold ml-3">
             <div class="text-truncate">
-
-              {{article.author_name}}</div>
+              <router-link :to="{path:'user/profile/',query:{uid:article.author_id}}">@{{article.author_name}}</router-link></div>
             <div class="small text-gray-500">{{article.id}}</div>
           </div>
           <span class="ml-auto small">{{article.timestamp | formatDate }}</span>
@@ -98,12 +97,12 @@ export default {
   },
   data () {
     return {
-      likes_count: Number,
+      likes_count: 0,
       isLike: false,
       errmsg: '',
-      content:'',
-      comment_list:[],
-      comment_content:''
+      content: '',
+      comment_list: [],
+      comment_content: ''
     }
   },
   mounted () {
@@ -132,7 +131,7 @@ export default {
           if (action === 'retweet') self.$emit('retweet', response.data)
           if (action === 'like' || action === 'unlike') {
             self.likes_count = response.data.likes_count
-            self.isLike = ! self.isLike
+            self.isLike = !self.isLike
           }
         },
         error => {
@@ -140,17 +139,28 @@ export default {
         }
       )
     },
-    handleTagClick(tid){
-      this.$router.push({path:'articles/search/?tid='+tid,props:(route)=>({
-        query: route.query.tid
-      })})
+    handleTagClick (tid) {
+      this.$router.push({
+        path: 'articles/search/?tid=' + tid,
+        props: (route) => ({
+          query: route.query.tid
+        })
+      })
+    },
+    submitComment () {
+
     }
-    //TODO 解决标签下划线问题
+    // TODO 解决标签下划线问题
+  },
+  watch: {
+    $route (to, from) {
+      if (to.path !== from.path) location.reload
+    }
   },
   filters: {
     formatDate: function (time) {
       if (time != null && time !== '') {
-        let date = formatTimeToStr(time)
+        const date = formatTimeToStr(time)
         return moment(date).fromNow()
       } else {
         return ''

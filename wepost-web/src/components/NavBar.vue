@@ -62,18 +62,17 @@ export default {
   },
   data () {
     return {
-      userinfo:Object
+      userinfo: Object
     }
   },
   mounted () {
     this.userinfo = this.$store.getters.getUserInfo
-
   },
   methods: {
-    logout(){
-      this.$store.commit('setToken','');
-      this.$store.commit('setUser',null);
-      location.reload();
+    logout () {
+      this.$store.commit('setToken', '')
+      this.$store.commit('setUser', null)
+      location.reload()
     }
   }
 }

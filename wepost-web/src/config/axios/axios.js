@@ -5,7 +5,7 @@ import store from '@/store'
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.headers = [{
-  //HTTP_X_REQUESTED_WITH: 'XMLHttpRequest',
+  // HTTP_X_REQUESTED_WITH: 'XMLHttpRequest',
   'X-Requested-With': 'XMLHttpRequest',
   'Content-Type': 'application/json'
 }]

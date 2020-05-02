@@ -43,28 +43,28 @@ export default {
   name: 'UserAside',
   data () {
     return {
-      userinfo:Object,
-      username:'nib'
+      userinfo: Object,
+      username: 'nib'
     }
   },
   mounted () {
     this.userinfo = this.$store.getters.getUserInfo
   },
   methods: {
-      getUserInfo(){
-        let self = this;
-        this.$axios.get('/user/detail/',{
-          params:{
-            username:this.username
-          }
-        }).then(response=>{
-          console.log(response.data);
+    getUserInfo () {
+      const self = this
+      this.$axios.get('/user/detail/', {
+        params: {
+          username: this.username
+        }
+      }).then(response => {
+        console.log(response.data)
 
-          self.userinfo = response.data
-        },error=>{
+        self.userinfo = response.data
+      }, error => {
 
-        })
-      }
+      })
+    }
   }
 }
 </script>

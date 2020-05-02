@@ -90,3 +90,7 @@ def articles_action_view(request, *args, **kwargs):
         msg = action + " success"
     return Response({'msg': msg}, status=200)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def comment_create_view(request, *args, **kwargs):
+    pass

@@ -7,7 +7,6 @@ import router from './router'
 import store from './store'
 import axios from '@/config/axios/axios'
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
-import moment from 'moment'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -18,8 +17,6 @@ Vue.use(BootstrapVueIcons)
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios
-Vue.prototype.$moment = moment
-moment.locale('zh-cn')
 
 new Vue({
   router,

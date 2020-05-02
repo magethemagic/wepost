@@ -9,36 +9,36 @@
 import PostItem from '@/components/PostItem.vue'
 
 export default {
-  name:'Detail',
-  components:{
+  name: 'Detail',
+  components: {
     PostItem
   },
-  data(){
-    return{
+  data () {
+    return {
       aid: 0,
-      article:[],
-      user:Object,
-      msg:''
+      article: [],
+      user: Object,
+      msg: ''
     }
   },
-  mounted(){
+  mounted () {
     this.aid = this.$route.query.aid
     this.getDetail(this.aid)
   },
-  methods:{
-    getDetail(aid){
-      let self = this;
-      this.$axios.get('/articles/'+aid+'/').then(response=>{
-        self.article = response.data;
-      },error=>{
+  methods: {
+    getDetail (aid) {
+      const self = this
+      this.$axios.get('/articles/' + aid + '/').then(response => {
+        self.article = response.data
+      }, error => {
         self.msg = error.data
       })
     },
-    getUser(uid){
-      let self = this;
-      this.$axios.get('/user/detail/'+uid+'/').then(response=>{
-        self.article = response.data;
-      },error=>{
+    getUser (uid) {
+      const self = this
+      this.$axios.get('/user/detail/' + uid + '/').then(response => {
+        self.article = response.data
+      }, error => {
         self.msg = error.data
       })
     }

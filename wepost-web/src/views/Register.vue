@@ -69,44 +69,44 @@
 
 <script>
 export default {
-  name: "Register",
-  data() {
+  name: 'Register',
+  data () {
     return {
       form: {
-        username: "",
-        email: "",
-        tel: "",
-        password: "",
-        repassword: ""
+        username: '',
+        email: '',
+        tel: '',
+        password: '',
+        repassword: ''
       },
-      msg: ""
-    };
+      msg: ''
+    }
   },
   methods: {
-    onSubmit() {
-      let self = this;
-      const data = new FormData();
-      data.append("username", this.form.username);
-      data.append("email", this.form.email);
-      data.append("phone_number", this.form.tel);
-      data.append("password", this.form.password);
+    onSubmit () {
+      const self = this
+      const data = new FormData()
+      data.append('username', this.form.username)
+      data.append('email', this.form.email)
+      data.append('phone_number', this.form.tel)
+      data.append('password', this.form.password)
       this.$axios
-        .post("/user/register/", data, {
+        .post('/user/register/', data, {
           headers: {}
         })
         .then(
           response => {
-            if(response.data.code === 1){
+            if (response.data.code === 1) {
               self.$router.push('/user/login')
             }
           },
           error => {
-            console.log(error);
+            console.log(error)
           }
-        );
+        )
     }
   }
-};
+}
 </script>
 
 <style scoped>

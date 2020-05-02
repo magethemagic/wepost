@@ -29,34 +29,34 @@
 
 <script>
 // @ is an alias to /src
-import PostItem from "@/components/PostItem.vue";
-import UserAside from "@/components/UserAside";
-import PostArea from "@/components/PostArea.vue";
+import PostItem from '@/components/PostItem.vue'
+import UserAside from '@/components/UserAside'
+import PostArea from '@/components/PostArea.vue'
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     PostItem,
     UserAside,
     PostArea
   },
-  data() {
+  data () {
     return {
       page: 1,
       articleList: [],
-      errmsg: "",
-      tips:'Click to load more',
-      required:true
-    };
+      errmsg: '',
+      tips: 'Click to load more',
+      required: true
+    }
   },
-  mounted() {
-    this.loadArticle();
+  mounted () {
+    this.loadArticle()
   },
   methods: {
-    loadArticle: async function() {
-      const that = this;
+    loadArticle: async function () {
+      const that = this
       await this.$axios
-        .get("/articles/", {
+        .get('/articles/', {
           params: {
             page: this.page
           }
@@ -64,27 +64,27 @@ export default {
         .then(
           response => {
             if (that.articleList.length > 0) {
-              that.articleList = that.articleList.concat(response.data);
+              that.articleList = that.articleList.concat(response.data)
             } else {
-              that.articleList = response.data;
+              that.articleList = response.data
             }
-            that.page += 1;
+            that.page += 1
           },
           error => {
-            if(error.status === 404){
+            if (error.status === 404) {
               that.tips = '没有更多了'
               that.required = false
             }
-            that.errmsg = error;
+            that.errmsg = error
           }
-        );
+        )
     },
-    getArticle(data) {
-      this.articleList.unshift(data);
+    getArticle (data) {
+      this.articleList.unshift(data)
     },
-    linkGen(pageNum) {
-      return pageNum === 1 ? "?" : `?page=${pageNum}`;
+    linkGen (pageNum) {
+      return pageNum === 1 ? '?' : `?page=${pageNum}`
     }
   }
-};
+}
 </script>
