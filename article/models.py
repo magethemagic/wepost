@@ -12,16 +12,17 @@ class ArticleLike(models.Model):
 
 
 class ArticleTags(models.Model):
-    tag = models.ForeignKey("Tag",on_delete=models.CASCADE,related_name='tags')
-    article = models.ForeignKey("Article",on_delete=models.CASCADE,related_name='articles_tag')
+    tag = models.ForeignKey("Tag", on_delete=models.CASCADE, related_name='tags')
+    article = models.ForeignKey("Article", on_delete=models.CASCADE, related_name='articles_tag')
 
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
-    article = models.ManyToManyField("Article",related_name='articles_of_a_tag', blank=True, through=ArticleTags)
+    article = models.ManyToManyField("Article", related_name='articles_of_a_tag', blank=True, through=ArticleTags)
 
     def __str__(self):
         return self.name
+
 
 class Article(models.Model):
     parent = models.ForeignKey("self", on_delete=models.SET_NULL, null=True)
@@ -31,7 +32,7 @@ class Article(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     image = models.FileField(upload_to='images/', blank=True, null=True)
 
-    tags = models.ManyToManyField(Tag,related_name='article_tags',blank= True, through=ArticleTags)
+    tags = models.ManyToManyField(Tag, related_name='article_tags', blank=True, through=ArticleTags)
 
     class Meta:
         ordering = ['-id']
@@ -45,10 +46,10 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
-    content = models.CharField(max_length=140,verbose_name='评论内容')
+    content = models.CharField(max_length=140, verbose_name='评论内容')
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='comments_user')
-    article = models.ForeignKey(Article,on_delete=models.CASCADE,related_name='comments_article')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='usercomments')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
 
     def __str__(self):
         return self.content

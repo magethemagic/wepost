@@ -1,24 +1,23 @@
 from django.contrib import admin
 
 # Register your models here.
-from article.models import Article, ArticleLike,ArticleTags,Tag,Comment
+from article.models import Article, ArticleLike, ArticleTags, Tag, Comment
 
 
 class ArticleLikeAdmin(admin.TabularInline):
-        model = ArticleLike
+    model = ArticleLike
 
 
 class ArticleTagAdmin(admin.TabularInline):
-        model = ArticleTags
+    model = ArticleTags
 
 
 class ArticleCommentAdmin(admin.TabularInline):
-        model = Comment
-
+    model = Comment
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    inlines = [ArticleLikeAdmin,ArticleTagAdmin,ArticleCommentAdmin]
+    inlines = [ArticleLikeAdmin, ArticleTagAdmin, ArticleCommentAdmin]
     list_display = ['__str__', 'user']
     search_fields = ['content', 'user__username']
 

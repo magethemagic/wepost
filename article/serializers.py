@@ -79,19 +79,25 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     tags = TagSerializer(many=True, read_only=True)
 
-    comments_article = CommentSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Article
         fields = ['id', 'author_name', 'author_id', 'timestamp', 'content', 'likes_count', 'is_retweet', 'parent',
-                  'tags', 'comments_article']
+                  'tags', 'comments']
 
     @staticmethod
     def get_likes_count(obj):
         return obj.likes.count()
 
 
-class ArticlePaginations(PageNumberPagination):
+class CommentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['id', 'content', 'timestamp']
+
+
+class ArticlePagination(PageNumberPagination):
     page_size = 20
     page_query_param = 'page'
     page_size_query_param = 'size'
