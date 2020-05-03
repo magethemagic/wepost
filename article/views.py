@@ -5,11 +5,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from article.models import Article
+from article.models import Article, Comment
 from article.serializers import (ArticleSerializer,
                                  ArticleActionSerializer,
                                  ArticleCreateSerializer,
-                                 ArticlePaginations, CommentCreateSerializer, CommentSerializer)
+                                 ArticlePagination, CommentCreateSerializer, CommentSerializer)
 
 
 def home_view(request):
@@ -20,7 +20,7 @@ def home_view(request):
 @api_view(['GET'])
 def articles_list_view(request, *args, **kwargs):
     queryset = Article.objects.all()
-    paginate = ArticlePaginations()
+    paginate = ArticlePagination()
     page_obj = paginate.paginate_queryset(queryset, request)
     serializer = ArticleSerializer(page_obj, many=True)
     return Response(serializer.data, status=200)
@@ -102,5 +102,5 @@ def comment_create_view(request, *args, **kwargs):
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user, article=article)
         aid = serializer.data.get('id')
-        serializer = CommentSerializer(Article.objects.get(pk=aid))
+        serializer = CommentSerializer(Comment.objects.get(pk=aid))
         return Response(serializer.data, status=201)
