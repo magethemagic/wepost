@@ -6,10 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from article.models import Article
-from article.serializers import (ArticleSerializer, 
-                                ArticleActionSerializer, 
-                                ArticleCreateSerializer,
-                                ArticlePaginations)
+from article.serializers import (ArticleSerializer,
+                                 ArticleActionSerializer,
+                                 ArticleCreateSerializer,
+                                 ArticlePaginations, CommentCreateSerializer, CommentSerializer)
 
 
 def home_view(request):
@@ -21,7 +21,7 @@ def home_view(request):
 def articles_list_view(request, *args, **kwargs):
     queryset = Article.objects.all()
     paginate = ArticlePaginations()
-    page_obj = paginate.paginate_queryset(queryset,request)
+    page_obj = paginate.paginate_queryset(queryset, request)
     serializer = ArticleSerializer(page_obj, many=True)
     return Response(serializer.data, status=200)
 
@@ -83,14 +83,24 @@ def articles_action_view(request, *args, **kwargs):
             serializer = ArticleSerializer(obj)
             return Response(serializer.data, status=200)
         elif action == "retweet":
-            new_tweet = Article.objects.create(user=request.user, parent=obj,content=content)
+            new_tweet = Article.objects.create(user=request.user, parent=obj, content=content)
             serializer = ArticleSerializer(new_tweet)
             return Response(serializer.data, status=200)
             # TODO 转发
         msg = action + " success"
     return Response({'msg': msg}, status=200)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def comment_create_view(request, *args, **kwargs):
-    pass
+    aid = request.POST.get('aid')
+    article = Article.objects.filter(pk=aid).first()
+    if not article:
+        return Response({'msg': 'article does not exist'}, status=404)
+    serializer = CommentCreateSerializer(data=request.POST)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=request.user, article=article)
+        aid = serializer.data.get('id')
+        serializer = CommentSerializer(Article.objects.get(pk=aid))
+        return Response(serializer.data, status=201)
