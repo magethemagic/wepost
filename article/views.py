@@ -25,13 +25,10 @@ def articles_list_view(request, *args, **kwargs):
     username = request.GET.get('username')
     if username is not None:
         queryset = queryset.filter(user__username__iexact=username)
-    #     page_obj = paginate.paginate_queryset(queryset2, request)
-    #     serializer = ArticleSerializer(page_obj, many=True)
-    #     return Response(serializer.data, status=200)
-    # else:
     page_obj = paginate.paginate_queryset(queryset, request)
     serializer = ArticleSerializer(page_obj, many=True)
-    return Response(serializer.data, status=200)
+    # return Response(serializer.data, status=200)
+    return paginate.get_paginated_response(serializer.data)
 
 
 @api_view(['GET'])

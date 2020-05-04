@@ -55,29 +55,27 @@ export default {
   methods: {
     loadArticle: async function () {
       const that = this
-      await this.$axios
-        .get('/articles/', {
-          params: {
-            page: this.page
+      await this.$axios.get('/articles/', {params: {page: this.page}}).then(
+        response => {
+          if (!response.data.next) {
+            that.tips = '没有更多了'
+            that.required = false
           }
-        })
-        .then(
-          response => {
-            if (that.articleList.length > 0) {
-              that.articleList = that.articleList.concat(response.data)
-            } else {
-              that.articleList = response.data
-            }
-            that.page += 1
-          },
-          error => {
-            if (error.status === 404) {
-              that.tips = '没有更多了'
-              that.required = false
-            }
-            that.errmsg = error
+          if (that.articleList.length > 0) {
+            that.articleList = that.articleList.concat(response.data.results)
+          } else {
+            that.articleList = response.data.results
           }
-        )
+          that.page += 1
+        },
+        error => {
+          if (error.status === 404) {
+            that.tips = '没有更多了'
+            that.required = false
+          }
+          that.errmsg = error
+        }
+      )
     },
     getArticle (data) {
       console.log('unshift to article list', data)
