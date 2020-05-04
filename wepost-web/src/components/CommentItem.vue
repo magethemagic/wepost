@@ -12,7 +12,8 @@
             ></textarea>
           </b-col>
           <b-col sm="2">
-            <b-button class="text-center" :disabled="content.length >140" variant="primary" @click="addComment">Post
+            <b-button class="text-center rounded-pill" :disabled="content.length >140" variant="primary"
+                      @click="addComment">Post
             </b-button>
           </b-col>
         </b-row>

@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.pagination import PageNumberPagination
 
 from article.models import Article, Tag, Comment
-from tweetme2 import settings
+from TwitterDjango import settings
 
 MAX_BLOG_LENGTH = settings.MAX_BLOG_LENGTH
 

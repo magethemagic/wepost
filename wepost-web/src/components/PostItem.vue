@@ -67,35 +67,35 @@
   import {formatTimeToStr} from '@/utils/dateFormat.js'
   import CommentItem from './CommentItem.vue'
   import moment from 'moment'
-moment.locale('zh/cn')
 
-export default {
-  name: 'PostItem',
-  components: {
-    'my-comments': CommentItem
-  },
-  props: {
-    msg: String,
-    article: Object
-  },
-  data() {
-    return {
-      likes_count: 0,
-      isLike: false,
-      errmsg: '',
-      content: '',
-      action: '',
-      comment_list: []
-    }
-  },
-  created() {
-    this.likes_count = this.article.likes_count
-    this.comment_list = this.article.comments
-    console.log(this.article)
-  },
-  mounted() {
+  moment.locale('zh/cn')
 
+  export default {
+    name: 'PostItem',
+    components: {
+      'my-comments': CommentItem
+    },
+    props: {
+      msg: String,
+      article: Object
   },
+    data() {
+      return {
+        likes_count: 0,
+        isLike: false,
+        errmsg: '',
+        content: '',
+        comment_list: []
+      }
+    },
+    created() {
+      this.likes_count = this.article.likes_count
+      this.comment_list = this.article.comments
+      console.log(this.article)
+    },
+    mounted() {
+
+    },
   methods: {
     viewArticle: function (aid) {
       this.$router.push({
@@ -113,9 +113,11 @@ export default {
       const self = this
       this.$axios.post('/articles/action/', data).then(
         response => {
-          console.log(response)
-          if (self.action === 'retweet') self.$emit('retweetSuccess', response.data)
-          if (self.action === 'like' || self.action === 'unlike') {
+          if (action === 'retweet') {
+            console.log(response.data)
+            self.$emit('retweetSuccess', response.data)
+            self.content = ''
+          } else if (action === 'like' || action === 'unlike') {
             self.likes_count = response.data.likes_count
             self.isLike = !self.isLike
           }
