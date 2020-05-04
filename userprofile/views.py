@@ -36,12 +36,15 @@ def user_detail_view(request, *args, **kwargs):
 def user_follow_view(request, username, *args, **kwargs):
     me = request.user
     to_followed = User.objects.filter(username=username)
+    action = request.data.get('action') or ''
+    context = {}
+    if me.username == username:
+        context['followers_count'] = me.userprofile.followers.count()
+        return Response(context, status=200)
     if not to_followed.exists():
         return Response({}, status=404)
     other = to_followed.first()
     profile = other.userprofile
-    action = request.data.get('action') or ''
-    context = {}
     if action == 'unfollow':
         context['msg'] = 'removed'
         profile.followers.remove(me)
@@ -51,4 +54,4 @@ def user_follow_view(request, username, *args, **kwargs):
     else:
         pass
     context['followers_count'] = profile.followers.count()
-    return Response(context, status=400)
+    return Response(context, status=200)
