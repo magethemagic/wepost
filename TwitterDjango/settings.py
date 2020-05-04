@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # internal
     'article',
     'account',
+    'userprofile'
 ]
 
 MIDDLEWARE = [
@@ -64,7 +65,7 @@ ROOT_URLCONF = 'TwitterDjango.urls'
 
 SESSION_COOKIE_AGE = 60 * 60 * 24
 
-AUTH_USER_MODEL = 'account.UserProfile'
+AUTH_USER_MODEL = 'account.User'
 
 TEMPLATES = [
     {
@@ -134,6 +135,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "static-root")
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True  # any website has access to my api

@@ -17,15 +17,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, re_path, include  # url()
-from django.views.generic import TemplateView
+from django.views.static import serve
 
 from article.views import home_view
 
 urlpatterns = [
     path('', home_view, name='home'),
+    re_path(r'media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     path('admin/', admin.site.urls),
     path('api/articles/', include(('article.urls', 'article'), namespace='article')),
     path('api/user/', include(('account.urls', 'account'), namespace='user')),
+    path('api/profile/', include(('userprofile.urls', 'userprofile'), namespace='profile')),
 ]
 
 if settings.DEBUG:

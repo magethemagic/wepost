@@ -2,13 +2,13 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Form
 
-from account.models import UserProfile
+from account.models import User
 
 
 class UserRegisterForm(ModelForm):
     class Meta:
-        model = UserProfile
-        fields = ['username', 'phone_number', 'email', 'password']
+        model = User
+        fields = ['username', 'email', 'password']
 
 
 class UserLoginForm(Form):
@@ -18,6 +18,6 @@ class UserLoginForm(Form):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if not UserProfile.objects.filter(username=username).exists():
+        if not User.objects.filter(username=username).exists():
             raise ValidationError('用户名不存在')
         return username

@@ -3,12 +3,12 @@
     <div v-if="userinfo" class="box mb-3 shadow-sm border rounded bg-white profile-box text-center">
       <div class="py-4 px-3 border-bottom">
         <img class="img-fluid mt-2 rounded-circle" alt="Avatar"
-             :src="userinfo.user_avatar">
+             :src="userinfo.avatar">
         <h5 class="font-weight-bold text-dark mb-1 mt-4">{{userinfo.username}}</h5>
         <p class="mb-0 text-muted">{{userinfo.email}}</p>
       </div>
       <div class="box p-3 border-bottom">
-        <p>{{userinfo.user_desc}}</p>
+        <p>{{userinfo.desc}}</p>
       </div>
       <div class="d-flex">
         <div class="col-6 border-right p-3">
@@ -59,10 +59,9 @@ export default {
         }
       }).then(response => {
         console.log(response.data)
-
         self.userinfo = response.data
       }, error => {
-
+        console.log(error.data)
       })
     }
   }

@@ -33,7 +33,7 @@
 
               <b-list-group style="max-width: 500px;" class="b-avatar">
                 <b-list-group-item class="d-flex align-items-center">
-                  <b-avatar class="mr-3" :src="userinfo.user_avatar"></b-avatar>
+                  <b-avatar class="mr-3" :src="userinfo.avatar"></b-avatar>
                   <span class="mr-auto">{{userinfo.username}}</span>
                 </b-list-group-item>
               </b-list-group>

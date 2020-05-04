@@ -2,11 +2,11 @@ from django.conf import settings
 from django.db import models
 
 # Create your models here.
-from account.models import UserProfile
+from account.models import User
 
 
 class ArticleLike(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='users')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
     article = models.ForeignKey("Article", on_delete=models.CASCADE, related_name='articles_like')
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -25,10 +25,10 @@ class Tag(models.Model):
 
 
 class Article(models.Model):
-    parent = models.ForeignKey("self", on_delete=models.SET_NULL, null=True)
+    parent = models.ForeignKey("self", on_delete=models.SET_NULL, null=True, blank=True)
     content = models.CharField(max_length=140, verbose_name='博客内容')
-    likes = models.ManyToManyField(UserProfile, related_name='user_like', blank=True, through=ArticleLike)
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='articles')
+    likes = models.ManyToManyField(User, related_name='user_like', blank=True, through=ArticleLike)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
     timestamp = models.DateTimeField(auto_now_add=True)
     image = models.FileField(upload_to='images/', blank=True, null=True)
 
@@ -48,7 +48,7 @@ class Article(models.Model):
 class Comment(models.Model):
     content = models.CharField(max_length=140, verbose_name='评论内容')
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='usercomments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='usercomments')
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
 
     def __str__(self):

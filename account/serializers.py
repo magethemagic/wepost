@@ -1,14 +1,9 @@
 from rest_framework import serializers
 
-from account.models import UserProfile
-from article.serializers import ArticleSerializer
+from account.models import User
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
-    blog_count = serializers.IntegerField(source='articles.count')
-
-    # followers_count = serializers.IntegerField(source='followers.count')
-
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
-        fields = ['id', 'username', 'email', 'user_desc', 'user_avatar', 'phone_number', 'blog_count']
+        model = User
+        fields = ['id', 'username', 'password']

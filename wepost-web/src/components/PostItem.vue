@@ -78,7 +78,7 @@
     props: {
       msg: String,
       article: Object
-  },
+    },
     data() {
       return {
         likes_count: 0,
@@ -96,34 +96,36 @@
     mounted() {
 
     },
-  methods: {
-    viewArticle: function (aid) {
-      this.$router.push({
-        path: '/article/detail',
-        query: {
-          aid: aid
-        }
-      })
-    },
-    handleClickAction(aid, action) {
-      const data = new FormData()
-      data.append('id', aid)
-      data.append('action', action)
-      data.append('content', this.content)
-      const self = this
-      this.$axios.post('/articles/action/', data).then(
-        response => {
-          if (action === 'retweet') {
-            console.log(response.data)
-            self.$emit('retweetSuccess', response.data)
-            self.content = ''
+    methods: {
+      viewArticle: function (aid) {
+        this.$router.push({
+          path: '/article/detail',
+          query: {
+            aid: aid
+          }
+        })
+      },
+      handleClickAction(aid, action) {
+        const data = new FormData()
+        data.append('id', aid)
+        data.append('action', action)
+        data.append('content', this.content)
+        const self = this
+        this.$axios.post('/articles/action/', data).then(
+          response => {
+            if (action === 'retweet') {
+              self.$emit('retweetSuccess', response.data)
+              self.content = ''
           } else if (action === 'like' || action === 'unlike') {
             self.likes_count = response.data.likes_count
             self.isLike = !self.isLike
           }
         },
         error => {
-          console.log(error)
+          alert(error.data.detail)
+          if (error.status === 401) {
+            self.$router.push('/user/login')
+          }
         }
       )
     },

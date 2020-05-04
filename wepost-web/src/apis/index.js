@@ -7,12 +7,10 @@ function BackendLookup(method, endpoint, data) {
   if (data) {
     JsonData = JSON.stringify(data)
   }
-  const token = localStorage.getItem('logintoken')
   return axios({
     method: method,
     url: `${host}${endpoint}`,
     headers: {
-      Authorization: 'token ' + token,
       'Content-Type': 'application/json'
     },
     data: JsonData

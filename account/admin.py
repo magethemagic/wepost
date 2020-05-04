@@ -1,8 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from account.models import UserProfile
-
+from account.models import User
 
 # class FolloweAdmin(admin.TabularInline):
 #     model = UserFollow
@@ -13,4 +12,4 @@ from account.models import UserProfile
 
 
 # admin.site.register(UserProfile, UserAdmin)
-admin.site.register(UserProfile)
+admin.site.register(User)

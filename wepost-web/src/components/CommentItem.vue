@@ -55,7 +55,10 @@ export default {
           self.content = ''
         }
       }, error => {
-        alert(error.data)
+        alert(error.data.detail)
+        if (error.status === 401) {
+          self.$router.push('/user/login')
+        }
       })
     }
   }

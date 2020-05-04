@@ -1,19 +1,19 @@
 import axios from 'axios'
 import store from '@/store'
 
-// axios.defaults.baseURL = 'http://127.0.0.1:8000/'
+axios.defaults.baseURL = 'http://127.0.0.1:8000/api/'
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.headers = [{
+axios.defaults.headers = {
   // HTTP_X_REQUESTED_WITH: 'XMLHttpRequest',
   'X-Requested-With': 'XMLHttpRequest',
   'Content-Type': 'application/json'
-}]
+}
 axios.defaults.withCredentials = true
 
 axios.interceptors.request.use(
   config => {
-    if (store.state.token) { // 若存在token，则每个Http Header都加上token
+    if (store.state.token.length > 0) { // 若存在token，则每个Http Header都加上token
       config.headers.Authorization = `token ${store.state.token}`
     }
     return config

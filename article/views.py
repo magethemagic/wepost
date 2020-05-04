@@ -22,6 +22,13 @@ def home_view(request):
 def articles_list_view(request, *args, **kwargs):
     queryset = Article.objects.all()
     paginate = ArticlePagination()
+    username = request.GET.get('username')
+    if username is not None:
+        queryset = queryset.filter(user__username__iexact=username)
+    #     page_obj = paginate.paginate_queryset(queryset2, request)
+    #     serializer = ArticleSerializer(page_obj, many=True)
+    #     return Response(serializer.data, status=200)
+    # else:
     page_obj = paginate.paginate_queryset(queryset, request)
     serializer = ArticleSerializer(page_obj, many=True)
     return Response(serializer.data, status=200)

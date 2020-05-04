@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import apis from '@/apis'
+import apis from '@/apis'
 export default {
   name: 'Search',
   data() {
@@ -24,6 +24,8 @@ export default {
       apis.getArticleList({id: 1}).then(response => {
         console.log(response)
         this.article = response.data
+      }, error => {
+        alert(error.data)
       })
     }
   }

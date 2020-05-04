@@ -34,6 +34,7 @@ export default {
       this.$axios.get('/articles/' + aid + '/').then(response => {
         console.log(response)
         self.article = response.data
+        self.getUser(self.article.author_id)
       }, error => {
         self.msg = error.data
       })
