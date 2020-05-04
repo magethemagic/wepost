@@ -34,11 +34,17 @@ const routes = [
     path: '/article/detail',
     name: 'Detail',
     component: () => import('../views/Detail.vue')
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: () => import('../views/Search.vue')
   }
 ]
 
 const router = new VueRouter({
-  routes
+  routes: routes,
+  mode: 'history'
 })
 
 export default router

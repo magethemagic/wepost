@@ -7,7 +7,7 @@
           <main class="col col-xl-8 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
             <PostArea @addArticle="getArticle"></PostArea>
             <PostItem
-              @retweet="getArticle"
+              @retweetSuccess="getArticle"
               v-for="article in articleList"
               :key="article.id"
               :article="article"
@@ -80,6 +80,7 @@ export default {
         )
     },
     getArticle (data) {
+      console.log('unshift to article list', data)
       this.articleList.unshift(data)
     },
     linkGen (pageNum) {

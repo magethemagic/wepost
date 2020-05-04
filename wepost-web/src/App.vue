@@ -17,29 +17,29 @@ import NavBar from '@/components/NavBar.vue'
 
 export default {
   name: 'App',
-  provide(){
-    return{
-      reload:this.reload
+  provide() {
+    return {
+      reload: this.reload
     }
   },
   components: {
     NavBar
   },
-  data () {
+  data() {
     return {
-      RouterState:true
+      RouterState: true
     }
   },
   watch: {
-    $route (to,from) {
+    $route(to, from) {
       if (to.path === '/') location.reload()
       if (to.path === '/user/login' && this.$store.getters.getIsLogin) this.$router.push('/')
     }
   },
   methods: {
-    reload(){
+    reload() {
       this.RouterState = false
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.RouterState = true
       })
     }
@@ -52,7 +52,10 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  background-color: #ffffff;
+  /*background-image: url("assets/bg.png");*/
+  /*background-repeat:no-repeat;*/
+  /*background-attachment:fixed;*/
 }
 
 #nav {

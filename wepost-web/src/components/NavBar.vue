@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <b-navbar toggleable="lg" type="light" class="nav-bg" fixed="top">
+    <b-navbar toggleable="lg" type="light" class="nav-bg border-bottom" fixed="top">
       <b-navbar-brand href="/">WePost</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -65,7 +65,7 @@ export default {
       userinfo: Object
     }
   },
-  mounted () {
+  created() {
     this.userinfo = this.$store.getters.getUserInfo
   },
   methods: {
@@ -80,6 +80,6 @@ export default {
 
 <style scoped>
   .nav-bg {
-    background-color: #99CCFF !important;
+    background-color: #ffffff !important;
   }
 </style>

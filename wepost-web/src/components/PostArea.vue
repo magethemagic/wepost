@@ -1,10 +1,14 @@
 <template>
   <b-container class="post-area p-3">
-    <b-alert variant="danger" :show="msg.length>0 || content.length>140">{{msg}}{{content.length>140?'No more than 140 words':null}}</b-alert>
+    <b-alert
+      variant="danger"
+      :show="msg.length>0 || content.length>140">{{msg}}{{content.length>140?'No more than 140 words':null}}
+    </b-alert>
     <b-form-textarea
       id="textarea"
       v-model="content"
       no-resize
+      :state="content.length<=140"
       placeholder="Enter something..."
       rows="3"
       max-rows="3"
@@ -34,6 +38,7 @@ export default {
       const self = this
       const data = new FormData()
       data.append('content', this.content)
+      data.append('tags', this.tags)
       this.$axios
         .post('/articles/create/', data)
         .then(
@@ -41,6 +46,7 @@ export default {
             self.$emit('addArticle', response.data)
             self.content = ''
             self.msg = ''
+            self.tags = []
           },
           error => {
             if (error.status === 401) { self.msg = '请先登录' } else { self.msg = JSON.stringify(error.data) }

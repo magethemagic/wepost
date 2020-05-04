@@ -1,7 +1,7 @@
 <template>
   <div class="detail-view container">
     <p>aid:{{aid}}</p>
-    <PostItem :article="article"></PostItem>
+    <detail-post :article="article"></detail-post>
   </div>
 </template>
 
@@ -11,26 +11,29 @@ import PostItem from '@/components/PostItem.vue'
 export default {
   name: 'Detail',
   components: {
-    PostItem
+    'detail-post': PostItem
   },
   data () {
     return {
       aid: 0,
-      article: [],
+      article: Object,
       user: Object,
       msg: ''
     }
   },
-  mounted () {
+  created() {
     this.aid = this.$route.query.aid
     this.getDetail(this.aid)
   },
+  mounted() {
+
+  },
   methods: {
-    getDetail (aid) {
+    getDetail(aid) {
       const self = this
       this.$axios.get('/articles/' + aid + '/').then(response => {
+        console.log(response)
         self.article = response.data
-
       }, error => {
         self.msg = error.data
       })

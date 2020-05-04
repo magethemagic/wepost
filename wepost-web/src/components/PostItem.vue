@@ -6,22 +6,25 @@
           <b-avatar :text="article.author_name" variant="dark"></b-avatar>
           <div class="font-weight-bold ml-3">
             <div class="text-truncate">
-              <router-link :to="{path:'user/profile/',query:{uid:article.author_id}}">@{{article.author_name}}</router-link></div>
+              <router-link :to="{path:'user/profile/',query:{uid:article.author_id}}">@{{article.author_name}}
+              </router-link>
+            </div>
             <div class="small text-gray-500">{{article.id}}</div>
           </div>
           <span class="ml-auto small">{{article.timestamp | formatDate }}</span>
         </div>
       </template>
-      <b-card-text>{{article.content}}
-        <a href="javascript:void(0)" @click="handleTagClick(tag.id)"  v-for="tag in article.tags" :key="tag.id">#{{tag.name}}#</a>
+      <b-card-text><a href="#" @click.prevent="viewArticle(article.id)">
+        {{article.content}}</a>
+        <a href="javascript:void(0)" @click="handleTagClick(tag.id)" v-for="tag in article.tags" :key="tag.id">#{{tag.name}}#</a>
       </b-card-text>
 
-      <b-card class="text-left font-weight-bold" v-if="article.parent != null">
+      <b-card class="text-left font-weight-bold" v-if="article.parent !== null">
         <b-card-text class="text-left bg-gray">
-          <a href="#" @click.prevent="viewArticle(article.parent.id)">
+          <a href="#" @click.prevent="viewArticle(article.parent.author_id)">
             @{{article.parent.author_name}}:</a>
           <a href="#" @click.prevent="viewArticle(article.parent.id)">
-          {{article.parent.content}}</a>
+            {{article.parent.content}}</a>
         </b-card-text>
       </b-card>
 
@@ -29,7 +32,7 @@
         <div class="p-0">
           <a
             href="#"
-            @click="handleClickAction(article.id,isLike?'unlike':'like','',$event)"
+            @click.prevent="handleClickAction(article.id,isLike?'unlike':'like')"
             class="mr-3 text-secondary"
           >
             <b-icon-heart></b-icon-heart>
@@ -45,64 +48,53 @@
           >
             <b-icon-box-arrow-up-right></b-icon-box-arrow-up-right>Share
           </a>
-          <b-modal :id="'my-modal'+article.id" title="Retweet" @ok="handleClickAction(article.id,'retweet',content.length >0 ?content:'retweet' ,$event)">
+          <b-modal :id="'my-modal'+article.id" title="Retweet" @ok="handleClickAction(article.id,'retweet')">
             <b-textarea
-            class="my-4"
-            placeholder="retweet to..."
-            v-model="content"
-            no-resize
-            row=3></b-textarea>
+              class="my-4"
+              placeholder="retweet to..."
+              v-model="content"
+              no-resize
+              row=3></b-textarea>
           </b-modal>
         </div>
       </template>
     </b-card>
-    <b-collapse :id="'my-toggle'+article.id">
-      <b-card class="mb mb-3 box shadow-sm">
-        <b-card-text class="text-left border-bottom"
-        v-for="comment in article.comments_article"
-        :key="comment.id">
-        <a href="javascript:void(0)">@{{comment.user_name}}:</a>
-        {{comment.content}}</b-card-text>
-        <b-form-textarea
-      v-model="comment_content"
-      placeholder="Post comment..."
-      rows="2"
-      no-resize
-      max-rows="4"
-    ></b-form-textarea>
-      <div class="mr-auto"></div>
-      <b-button :disabled="content.length >140" variant="primary" @click="submitComment">Post</b-button>
-      </b-card>
-
-    </b-collapse>
+    <my-comments :aid="article.id" :toggle-id="'my-toggle'+article.id" :comments-list="article.comments"></my-comments>
   </div>
 </template>
 
 <script>
-import { formatTimeToStr } from '@/utils/dateFormat.js'
-
-import moment from 'moment'
+  import {formatTimeToStr} from '@/utils/dateFormat.js'
+  import CommentItem from './CommentItem.vue'
+  import moment from 'moment'
 moment.locale('zh/cn')
 
 export default {
   name: 'PostItem',
+  components: {
+    'my-comments': CommentItem
+  },
   props: {
     msg: String,
     article: Object
   },
-  data () {
+  data() {
     return {
       likes_count: 0,
       isLike: false,
       errmsg: '',
       content: '',
-      comment_list: [],
-      comment_content: ''
+      action: '',
+      comment_list: []
     }
   },
-  mounted () {
+  created() {
     this.likes_count = this.article.likes_count
-    this.comment_list = this.article.comments_article
+    this.comment_list = this.article.comments
+    console.log(this.article)
+  },
+  mounted() {
+
   },
   methods: {
     viewArticle: function (aid) {
@@ -113,18 +105,17 @@ export default {
         }
       })
     },
-    handleClickAction (aid, action, content) {
-      event.preventDefault()
+    handleClickAction(aid, action) {
       const data = new FormData()
       data.append('id', aid)
       data.append('action', action)
-      data.append('content', content)
+      data.append('content', this.content)
       const self = this
       this.$axios.post('/articles/action/', data).then(
         response => {
           console.log(response)
-          if (action === 'retweet') self.$emit('retweet', response.data)
-          if (action === 'like' || action === 'unlike') {
+          if (self.action === 'retweet') self.$emit('retweetSuccess', response.data)
+          if (self.action === 'like' || self.action === 'unlike') {
             self.likes_count = response.data.likes_count
             self.isLike = !self.isLike
           }
@@ -141,16 +132,10 @@ export default {
           query: route.query.tid
         })
       })
-    },
-    submitComment () {
-
     }
-    // TODO 解决标签下划线问题
   },
   watch: {
-    $route (to, from) {
-      if (to.path !== from.path) location.reload
-    }
+
   },
   filters: {
     formatDate: function (time) {
@@ -181,12 +166,8 @@ li {
   margin: 0 10px;
 }
 
-a {
-  color: #62acf1;
-  text-decoration: none;
-}
-
-a:focus,a:hover {
+a, a:focus, a:hover {
+  color: #333;
   text-decoration: none;
 }
 </style>
