@@ -3,12 +3,13 @@
     <b-row>
       <main class="col col-xl-9 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12 m-auto">
         <b-alert variant="danger" show v-show="errmsg !== ''">{{errmsg}}</b-alert>
-        <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="col col-xl-6 col-12 m-auto mr-auto">
-          <b-form-group  class="text-left"
-            id="input-group-1"
-            label="Username:"
-            label-for="input-1"
-            description=""
+        <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show"
+                class="col col-xl-6 col-12 m-auto mr-auto">
+          <b-form-group class="text-left"
+                        id="input-group-1"
+                        label="Username:"
+                        label-for="input-1"
+                        description=""
           >
             <b-form-input
               id="input-1"
@@ -33,8 +34,9 @@
           <b-button type="reset" variant="danger">Reset</b-button>
         </b-form >
         <div>
-          <router-link to="/user/retrieve">忘记密码</router-link> &emsp; &emsp; &emsp;
-        <router-link to="/user/register">还没有账号？注册</router-link>
+          <router-link to="/user/retrieve">忘记密码</router-link>
+          {{ }}
+          <router-link to="/user/register">还没有账号？注册</router-link>
         </div>
       </main>
 
@@ -43,57 +45,60 @@
 </template>
 
 <script>
-export default {
-  name: 'Login',
-  data () {
-    return {
-      errmsg: '',
-      form: {
-        username: '',
-        password: ''
-      },
-      rules: {
-        username: [{ required: true, message: '这是必填项', trigger: blur }],
-        password: [{ required: true, message: '这是必填项', trigger: blur }]
-      },
-      show: true
-    }
-  },
-  updated: function () {
-    if (this.$store.getters.getIsLogin) this.$router.push('/')
-  },
-  methods: {
-    onSubmit (evt) {
-      const self = this
-      evt.preventDefault()
-      const data = new FormData()
-      data.append('username', this.form.username)
-      data.append('password', this.form.password)
-      this.$axios.post('/user/login/', data).then(response => {
-        console.log(response)
-        self.$store.commit('setToken', response.data.token)
-        self.$store.commit('setUser', JSON.stringify(response.data.user))
-        self.$router.push('/')
-      }, error => {
+  import {mapGetters, mapMutations} from 'vuex'
+
+  export default {
+    name: 'Login',
+    data() {
+      return {
+        errmsg: '',
+        form: {
+          username: '',
+          password: ''
+        },
+        rules: {
+          username: [{required: true, message: '这是必填项', trigger: blur}],
+          password: [{required: true, message: '这是必填项', trigger: blur}]
+        },
+        show: true
+      }
+    },
+    updated() {
+      if (this.getIsLogin) this.$router.push('/')
+    },
+    methods: {
+      ...mapMutations('users', {setToken: 'setToken', setUser: 'setUser'}),
+      onSubmit() {
+        const self = this
+        const data = new FormData()
+        data.append('username', this.form.username)
+        data.append('password', this.form.password)
+        this.$axios.post('/user/login/', data).then(response => {
+          console.log(response)
+          this.setToken(response.data.token)
+          this.setUser(JSON.stringify(response.data.user))
+          self.$router.push('/')
+        }, error => {
         console.log('error', error)
         self.errmsg = 'login failed'
       })
     },
-    onReset (evt) {
-      evt.preventDefault()
-      // Reset our form values
-      this.form.username = ''
-      this.form.password = ''
-      this.errmsg = ''
-      // Trick to reset/clear native browser form validation state
-      this.show = false
-      this.$nextTick(() => {
-        this.show = true
-      })
+      onReset() {
+        this.form.username = ''
+        this.form.password = ''
+        this.errmsg = ''
+        // Trick to reset/clear native browser form validation state
+        this.show = false
+        this.$nextTick(() => {
+          this.show = true
+        })
+      }
+    },
+    computed: {
+      ...mapGetters('users', {getUserInfo: 'getUserInfo', getIsLogin: 'getIsLogin'})
     }
-  }
 
-}
+  }
 </script>
 
 <style scoped>

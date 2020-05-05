@@ -55,25 +55,33 @@
 </template>
 
 <script>
+import {mapMutations, mapGetters} from 'vuex'
 export default {
   name: 'NavBar',
   props: {
     isLogin: Boolean
   },
-  data () {
+  data() {
     return {
       userinfo: Object
     }
   },
   created() {
-    this.userinfo = this.$store.getters.getUserInfo
+    this.userinfo = this.getUserInfo
   },
   methods: {
-    logout () {
-      this.$store.commit('setToken', '')
-      this.$store.commit('setUser', null)
+    ...mapMutations('users', {
+      setToken: 'setToken',
+      setUser: 'setUser'
+    }),
+    logout() {
+      this.setToken('')
+      this.setUser(null)
       location.reload()
     }
+  },
+  computed: {
+    ...mapGetters('users', ['getUserInfo'])
   }
 }
 </script>

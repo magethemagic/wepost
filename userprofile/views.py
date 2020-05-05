@@ -11,8 +11,8 @@ from userprofile.serializers import UserProfileSerializer
 
 
 @api_view(['GET'])
-def user_detail_username_view(request, username, *args, **kwargs):
-    qs = UserProfile.objects.filter(user__username__iexact=username)
+def user_detail_uid_view(request, uid, *args, **kwargs):
+    qs = UserProfile.objects.filter(user__id=uid)
     if not qs.exists():
         return Response({'msg': 'user does not exists'}, status=404)
     serializer = UserProfileSerializer(qs.first())

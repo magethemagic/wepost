@@ -13,7 +13,7 @@
     </facet>
     <facet type="google-appengine-python" name="Google App Engine (Python)">
       <configuration>
-        <option name="rootFolder" value="" />
+        <option name="rootFolder" value="E:\PROJECTS\TwitterDjango" />
         <option name="sdkFolder" value="C:/Program Files (x86)/Google/Cloud SDK/google-cloud-sdk\platform\google_appengine" />
       </configuration>
     </facet>

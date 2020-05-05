@@ -13,8 +13,8 @@ axios.defaults.withCredentials = true
 
 axios.interceptors.request.use(
   config => {
-    if (store.state.token.length > 0) { // 若存在token，则每个Http Header都加上token
-      config.headers.Authorization = `token ${store.state.token}`
+    if (store.state.users.token.length > 0) { // 若存在token，则每个Http Header都加上token
+      config.headers.Authorization = `token ${store.state.users.token}`
     }
     return config
   },

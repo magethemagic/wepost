@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import filters
+from rest_framework.views import APIView
 
 from article.models import Article, Comment
 from article.serializers import (ArticleSerializer,
@@ -18,16 +20,26 @@ def home_view(request):
     return render(request, 'pages/home.html', context={'articles': articles}, status=200)
 
 
+class ArticleListApiView(ListAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['content', 'user__username']
+
+
 @api_view(['GET'])
 def articles_list_view(request, *args, **kwargs):
     queryset = Article.objects.all()
     paginate = ArticlePagination()
-    username = request.GET.get('username')
-    if username is not None:
-        queryset = queryset.filter(user__username__iexact=username)
+    uid = request.GET.get('uid')
+    print(uid)
+    if uid is not None:
+        queryset2 = queryset.filter(user__id=uid)
+        page_obj = paginate.paginate_queryset(queryset2, request)
+        serializer = ArticleSerializer(page_obj, many=True)
+        return paginate.get_paginated_response(serializer.data)
     page_obj = paginate.paginate_queryset(queryset, request)
     serializer = ArticleSerializer(page_obj, many=True)
-    # return Response(serializer.data, status=200)
     return paginate.get_paginated_response(serializer.data)
 
 

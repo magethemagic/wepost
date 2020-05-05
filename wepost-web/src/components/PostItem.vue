@@ -1,6 +1,8 @@
 <template>
   <div class="post-item">
-    <b-card header-tag="header" class="box shadow-sm rounded bg-white text-left mt mt-3">
+    <b-card header-tag="header"
+            footer-tag="footer"
+            class="mb mb-3 shadow-sm rounded  text-left">
       <template v-slot:header>
         <div class="p-0 d-flex align-items-center">
           <b-avatar :text="article.author_name" variant="dark"></b-avatar>
@@ -59,23 +61,27 @@
         </div>
       </template>
     </b-card>
-    <my-comments :aid="article.id" :toggle-id="'my-toggle'+article.id" :comments-list="article.comments"></my-comments>
+    <my-comments :isDetail="isDetail" :aid="article.id" :toggle-id="'my-toggle'+article.id"
+                 :comments-list="article.comments"></my-comments>
   </div>
 </template>
 
 <script>
-  import {formatTimeToStr} from '@/utils/dateFormat.js'
+  import {mapMutations} from 'vuex'
+  import {formatTimeToStr} from '@/utils/dateFormat'
   import CommentItem from './CommentItem.vue'
   import moment from 'moment'
 
-  moment.locale('zh/cn')
+  moment.locale('zh-cn')
 
   export default {
     name: 'PostItem',
+    inject: ['reload'],
     components: {
       'my-comments': CommentItem
     },
     props: {
+      isDetail: Boolean,
       msg: String,
       article: Object
     },
@@ -97,7 +103,11 @@
 
     },
     methods: {
+      ...mapMutations('articles', {
+        retweet: 'unshiftArticle'
+      }),
       viewArticle: function (aid) {
+        this.reload()
         this.$router.push({
           path: '/article/detail',
           query: {
@@ -114,18 +124,18 @@
         this.$axios.post('/articles/action/', data).then(
           response => {
             if (action === 'retweet') {
-              self.$emit('retweetSuccess', response.data)
+              this.retweet(response.data)
               self.content = ''
-          } else if (action === 'like' || action === 'unlike') {
-            self.likes_count = response.data.likes_count
-            self.isLike = !self.isLike
-          }
-        },
-        error => {
-          alert(error.data.detail)
-          if (error.status === 401) {
-            self.$router.push('/user/login')
-          }
+            } else if (action === 'like' || action === 'unlike') {
+              self.likes_count = response.data.likes_count
+              self.isLike = !self.isLike
+            }
+          },
+          error => {
+            alert(error.data.detail)
+            if (error.status === 401) {
+              self.$router.push('/user/login')
+            }
         }
       )
     },
@@ -173,5 +183,9 @@ li {
 a, a:focus, a:hover {
   color: #333;
   text-decoration: none;
+}
+
+header, footer {
+  background-color: #ffffff;
 }
 </style>

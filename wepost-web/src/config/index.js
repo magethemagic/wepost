@@ -1,5 +1,5 @@
 
-import axios from '@/config/axios/axios'
+import axios from 'axios/axios'
 
 export default {
   axios

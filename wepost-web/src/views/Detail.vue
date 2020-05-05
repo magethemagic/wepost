@@ -1,7 +1,8 @@
 <template>
   <div class="detail-view container">
     <p>aid:{{aid}}</p>
-    <detail-post :article="article"></detail-post>
+    <p>{{user}}</p>
+    <detail-post :isDetail="true" :article="article"></detail-post>
   </div>
 </template>
 
@@ -18,7 +19,8 @@ export default {
       aid: 0,
       article: Object,
       user: Object,
-      msg: ''
+      msg: '',
+      reloaded: false
     }
   },
   created() {
@@ -41,8 +43,8 @@ export default {
     },
     getUser (uid) {
       const self = this
-      this.$axios.get('/user/detail/' + uid + '/').then(response => {
-        self.article = response.data
+      this.$axios.get('/profile/' + uid).then(response => {
+        self.user = response.data
       }, error => {
         self.msg = error.data
       })

@@ -25,16 +25,24 @@ const getArticleList = params => {
 }
 
 const getUserDetail = params => {
-  return BackendLookup('get', 'user/detail/', params)
+  if ('uid' in params) {
+    return BackendLookup('get', 'profile/' + params.uid, null)
+  } else {
+    return BackendLookup('get', 'profile/?username=' + params.username, null)
+  }
 }
 
-export function PostArticle(params) {
+const PostArticle = (params) => {
   return BackendLookup('post', 'articles/create/', params)
 }
 
+const getUserArticle = params => {
+  return BackendLookup('get', 'articles/?uid=' + params.uid, null)
+}
 const apis = {
   getArticleList,
   getUserDetail,
-  PostArticle
+  PostArticle,
+  getUserArticle
 }
 export default apis

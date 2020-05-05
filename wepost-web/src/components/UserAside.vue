@@ -39,31 +39,27 @@
 </template>
 
 <script>
+import {mapGetters, mapActions} from 'vuex'
 export default {
   name: 'UserAside',
-  data () {
+  data() {
     return {
       userinfo: Object,
       username: 'nib'
     }
   },
-  mounted () {
-    this.userinfo = this.$store.getters.getUserInfo
+  created() {
+    this.userinfo = this.getUserInfo
+  },
+  mounted() {
   },
   methods: {
-    getUserInfo () {
-      const self = this
-      this.$axios.get('/user/detail/', {
-        params: {
-          username: this.username
-        }
-      }).then(response => {
-        console.log(response.data)
-        self.userinfo = response.data
-      }, error => {
-        console.log(error.data)
-      })
-    }
+    ...mapActions('users', {
+      getUserFromBackend: 'getUserFromBackend'
+    })
+  },
+  computed: {
+    ...mapGetters('users', {getUserInfo: 'getUserInfo'})
   }
 }
 </script>

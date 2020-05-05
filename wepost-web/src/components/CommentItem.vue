@@ -1,6 +1,6 @@
 <template>
   <div class="comment-item">
-    <b-collapse :id="'my-toggle'+aid">
+    <b-collapse :visible="isDetail" :id="'my-toggle'+aid">
       <b-card class="mb mb-3 box shadow-sm">
         <b-row class="mb mb-3">
           <b-col sm="10">
@@ -33,7 +33,7 @@
 <script>
 export default {
   name: 'CommentItem',
-  props: ['commentsList', 'aid', 'toggle-id'],
+  props: ['commentsList', 'aid', 'toggle-id', 'isDetail'],
   data() {
     return {
       comments_list: Array,
