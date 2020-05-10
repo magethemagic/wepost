@@ -7,7 +7,8 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from account.forms import UserRegisterForm, UserLoginForm
@@ -54,3 +55,17 @@ def user_logout(request):
     request.sess.flush()
     return redirect(reverse('home'))
 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def user_change_password(request, *args, **kwargs):
+    username = request.user
+    old_password = request.POST.get('old_password', None)
+    new_password = request.POST.get('new_password', None)
+    user = authenticate(username=username, password=old_password)
+    if user and new_password:
+        password = make_password(new_password)
+        User.objects.filter(pk=user.pk).update(password=password)
+        return Response({'msg': 'change password success'}, status=201)
+    else:
+        return Response({'msg': 'invalid user or password'}, status=403)

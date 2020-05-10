@@ -2,13 +2,10 @@
   <div id="app">
     <NavBar :isLogin="this.$store.getters.getIsLogin"></NavBar>
     <div class="nav-placeholder"></div>
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>  |
-      <router-link to="/user/login">Login</router-link>  |
-      <router-link to="/user/register">Register</router-link>
-    </div>
-    <router-view v-if="RouterState"/>
+    <div id="nav"></div>
+    <transition name="slide">
+      <router-view v-if="RouterState"/>
+    </transition>
   </div>
 </template>
 
@@ -52,7 +49,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background-color: #ffffff;
+  background-color: #F4F5F7;
   /*background-image: url("assets/bg.png");*/
   /*background-repeat:no-repeat;*/
   /*background-attachment:fixed;*/

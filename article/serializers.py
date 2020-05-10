@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from article.models import Article, Tag, Comment
 from TwitterDjango import settings
+from userprofile.serializers import UserProfileSerializer
 
 MAX_BLOG_LENGTH = settings.MAX_BLOG_LENGTH
 
@@ -44,7 +45,7 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ['id', 'timestamp', 'content', 'likes_count']
+        fields = ['id', 'timestamp', 'content', 'likes_count', 'tags']
 
     @staticmethod
     def validate_content(value):
@@ -74,6 +75,7 @@ class ArticleParentSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='user.username')
     author_id = serializers.IntegerField(source='user.id')
+    avatar = serializers.CharField(source='user.userprofile.avatar')
     likes_count = serializers.SerializerMethodField(read_only=True)
     parent = ArticleParentSerializer(read_only=True)
 
@@ -83,7 +85,8 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ['id', 'author_name', 'author_id', 'timestamp', 'content', 'likes_count', 'is_retweet', 'parent',
+        fields = ['id', 'author_name', 'author_id', 'avatar', 'timestamp', 'content', 'likes_count', 'is_retweet',
+                  'parent',
                   'tags', 'comments']
 
     @staticmethod

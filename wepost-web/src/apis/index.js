@@ -2,7 +2,7 @@ import axios from '@/config/axios/axios'
 
 const host = 'http://localhost:8000/api/'
 
-function BackendLookup(method, endpoint, data) {
+function BackendLookup(method, endpoint, params, data) {
   let JsonData
   if (data) {
     JsonData = JSON.stringify(data)
@@ -13,36 +13,33 @@ function BackendLookup(method, endpoint, data) {
     headers: {
       'Content-Type': 'application/json'
     },
+    params: params,
     data: JsonData
   })
 }
 
 const getArticleList = params => {
-  if ('id' in params) {
-    return BackendLookup('get', 'articles/' + params.id + '/')
-  }
-  return BackendLookup('get', 'articles/')
+  return BackendLookup('get', 'articles/', params, null)
 }
 
 const getUserDetail = params => {
-  if ('uid' in params) {
-    return BackendLookup('get', 'profile/' + params.uid, null)
-  } else {
-    return BackendLookup('get', 'profile/?username=' + params.username, null)
-  }
+  return BackendLookup('get', 'profile/' + params.uid, null)
 }
 
 const PostArticle = (params) => {
-  return BackendLookup('post', 'articles/create/', params)
+  return BackendLookup('post', 'articles/create/', null, params)
 }
 
-const getUserArticle = params => {
-  return BackendLookup('get', 'articles/?uid=' + params.uid, null)
+const getArticleByUser = params => {
+  return BackendLookup('get', 'articles/?uid=' + params.uid + '&page=' + params.page, null)
+}
+
+const getArticleByContent = (search, page) => {
+  return BackendLookup('get', 'articles/list/?search=' + search + '&page=' + page)
 }
 const apis = {
   getArticleList,
   getUserDetail,
-  PostArticle,
-  getUserArticle
+  PostArticle
 }
 export default apis

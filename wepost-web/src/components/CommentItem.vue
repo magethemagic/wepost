@@ -20,7 +20,7 @@
         <b-card-text class="text-left mb mb-2 border-bottom"
                      v-for="comment in commentsList"
                      :key="comment.id">
-          <router-link :to="{path:'user/profile/',query:{uid:comment.user_id}}">@{{comment.user_name}}:</router-link>
+          <router-link :to="{name:'Profile',query:{uid:comment.user_id}}">@{{comment.user_name}}:</router-link>
           {{comment.content}}
         </b-card-text>
 

@@ -17,6 +17,9 @@ const mutations = {
   addArticlesToState: (state, articles) => {
     state.articleList = state.articleList.concat(articles)
   },
+  addArticlesAndRefresh: (state, articles) => {
+    state.articleList = articles
+  },
   unshiftArticle(state, article) {
     state.articleList.unshift(article)
   },
@@ -30,17 +33,24 @@ const mutations = {
 }
 
 const actions = {
-  getArticles({commit}) {
-    apis.getArticleList().then(response => {
-      commit('addArticlesToState', response.data)
+  getArticles({commit, state}, params) {
+    const page = state.page
+    params.append('page', state.page)
+    apis.getArticleList(params).then(response => {
+      if (!response.data.next) {
+        commit('setTipsBtn', {
+          tips: '莫得更多了',
+          required: false
+        })
+      }
+      commit('addArticlesToState', response.data.results)
+      commit('changePage', page + 1)
     })
   },
   async loadArticle({commit, state}) {
     const page = state.page
-    console.log('execute load articles function', 'page is' + page)
     await axios.get('articles/', {params: {page: page}}).then(
       (response) => {
-        console.log(response)
         if (!response.data.next) {
           commit('setTipsBtn', {
             tips: '莫得更多了',
@@ -60,6 +70,14 @@ const actions = {
         }
       }
     )
+  },
+  async searchArticles({commit, state}, search) {
+    await apis.searchArticleByContent(search).then(response => {
+      console.log(response)
+      commit('addArticlesAndRefresh', response.data)
+    }, error => {
+      alert(error.data)
+    })
   }
 }
 

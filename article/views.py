@@ -1,12 +1,17 @@
+from datetime import datetime
+
+from django.db.models import Q
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import ListAPIView
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import filters
 from rest_framework.views import APIView
+
 
 from article.models import Article, Comment
 from article.serializers import (ArticleSerializer,
@@ -16,12 +21,12 @@ from article.serializers import (ArticleSerializer,
 
 
 def home_view(request):
-    articles = Article.objects.all()
-    return render(request, 'pages/home.html', context={'articles': articles}, status=200)
+    return render(request, 'index.html')
 
 
 class ArticleListApiView(ListAPIView):
     queryset = Article.objects.all()
+    pagination_class = ArticlePagination
     serializer_class = ArticleSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['content', 'user__username']
@@ -32,9 +37,14 @@ def articles_list_view(request, *args, **kwargs):
     queryset = Article.objects.all()
     paginate = ArticlePagination()
     uid = request.GET.get('uid')
-    print(uid)
+    search = request.GET.get('search')
     if uid is not None:
         queryset2 = queryset.filter(user__id=uid)
+        page_obj = paginate.paginate_queryset(queryset2, request)
+        serializer = ArticleSerializer(page_obj, many=True)
+        return paginate.get_paginated_response(serializer.data)
+    if search is not None:
+        queryset2 = queryset.filter(Q(user__username__icontains=search) | Q(content__icontains=search))
         page_obj = paginate.paginate_queryset(queryset2, request)
         serializer = ArticleSerializer(page_obj, many=True)
         return paginate.get_paginated_response(serializer.data)

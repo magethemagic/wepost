@@ -5,10 +5,11 @@
             class="mb mb-3 shadow-sm rounded  text-left">
       <template v-slot:header>
         <div class="p-0 d-flex align-items-center">
-          <b-avatar :text="article.author_name" variant="dark"></b-avatar>
+          <b-avatar :src="article.avatar" variant="light"></b-avatar>
+          <!--TODO 头像改成图片-->
           <div class="font-weight-bold ml-3">
             <div class="text-truncate">
-              <router-link :to="{path:'user/profile/',query:{uid:article.author_id}}">@{{article.author_name}}
+              <router-link :to="{name:'Profile',query:{uid:article.author_id}}">@{{article.author_name}}
               </router-link>
             </div>
             <div class="small text-gray-500">{{article.id}}</div>
@@ -109,7 +110,7 @@
       viewArticle: function (aid) {
         this.reload()
         this.$router.push({
-          path: '/article/detail',
+          name: 'Detail',
           query: {
             aid: aid
           }
@@ -136,16 +137,16 @@
             if (error.status === 401) {
               self.$router.push('/user/login')
             }
-        }
-      )
-    },
-    handleTagClick (tid) {
-      this.$router.push({
-        path: 'articles/search/?tid=' + tid,
-        props: (route) => ({
-          query: route.query.tid
+          }
+        )
+      },
+      handleTagClick(tid) {
+        this.$router.push({
+          name: 'Search',
+          query: {
+            tid: tid
+          }
         })
-      })
     }
   },
   watch: {

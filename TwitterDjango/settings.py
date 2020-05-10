@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'storages',
     # internal
     'article',
     'account',
@@ -70,7 +71,7 @@ AUTH_USER_MODEL = 'account.User'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates")],
+        'DIRS': [os.path.join(BASE_DIR, "frontend/dist")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -87,12 +88,20 @@ WSGI_APPLICATION = 'TwitterDjango.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
+MYSQL_DATABASE = {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'blog',
+    'USER': 'root',
+    'PASSWORD': 'root',
+    'HOST': 'localhost',
+    'PORT': 3306
+}
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'data.sqlite3'),
-    }
+    'default':
+        {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'data.sqlite3'),
+        }
 }
 
 # Password validation
@@ -132,9 +141,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'frontend/dist/static'),
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, "static-root")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -164,6 +173,20 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'Pragma',
 )
+# AWS Setting:
+
+# AWS_ACCESS_KEY_ID = 'AKIASA35FZ4JOMKMPF7Z'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'we-post'
+# ENDPOINT_URL = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+# REGIN_NAME = 'ap-southeast-1'
+# AWS_LOCATION = 'static'
+#
+# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_RENDERER_CLASSES = [
     'rest_framework.renderers.JSONRenderer',

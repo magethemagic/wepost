@@ -1,34 +1,29 @@
 <template>
-  <div class="search">
-    <p>TID</p>
-    <p>
-      {{article}}
-    </p>
+  <div class="search container">
+    <post-list :params="params"></post-list>
   </div>
 </template>
 
 <script>
-import apis from '@/apis'
+  import BaseArticleList from '@/components/BaseArticleList'
 export default {
   name: 'Search',
+  components: {
+    'post-list': BaseArticleList
+  },
   data() {
     return {
-      article: Object
+      page: 1,
+      articles: [],
+      params: {}
     }
   },
   created() {
-    this.getArticles()
-  },
-  methods: {
-    getArticles() {
-      apis.getArticleList({id: 1}).then(response => {
-        console.log(response)
-        this.article = response.data
-      }, error => {
-        alert(error.data)
-      })
+    this.params = {
+      search: this.$route.query.search
     }
-  }
+  },
+  methods: {}
 }
 </script>
 

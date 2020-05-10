@@ -13,7 +13,13 @@
       rows="3"
       max-rows="3"
     ></b-form-textarea>
-    <b-form-tags input-id="tags-basic" v-model="tags" class="mb-2 mt-3"></b-form-tags>
+    <b-form-tags
+      input-id="tags-basic"
+      v-model="tags"
+      tag-variant="primary"
+      tag-pills
+      remove-on-delete
+      class="mb-2 mt-3"></b-form-tags>
     <b-row class="mb-3 p-3">
       <b :class="['mr-auto',(content.length>140)?'text-danger':'' ]">{{content.length}}/140</b>
       <b-button :disabled="content.length >140" variant="primary" @click="submit">Post</b-button>
