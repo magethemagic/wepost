@@ -173,20 +173,6 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'Pragma',
 )
-# AWS Setting:
-
-# AWS_ACCESS_KEY_ID = 'AKIASA35FZ4JOMKMPF7Z'
-# AWS_SECRET_ACCESS_KEY = '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'
-# AWS_STORAGE_BUCKET_NAME = 'we-post'
-# ENDPOINT_URL = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-# AWS_S3_OBJECT_PARAMETERS = {
-#     'CacheControl': 'max-age=86400',
-# }
-# REGIN_NAME = 'ap-southeast-1'
-# AWS_LOCATION = 'static'
-#
-# STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_RENDERER_CLASSES = [
     'rest_framework.renderers.JSONRenderer',

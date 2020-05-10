@@ -23,6 +23,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+S3test.py
 
 node_modules/
 # local project items
