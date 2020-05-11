@@ -2,12 +2,15 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import GenericAPIView, UpdateAPIView
+from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from account.models import User
 from userprofile.models import UserProfile
-from userprofile.serializers import UserProfileSerializer
+from userprofile.serializers import UserProfileSerializer, UserProfileUpdateSerializer
 
 
 @api_view(['GET'])
@@ -33,12 +36,12 @@ def user_detail_view(request, *args, **kwargs):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def user_follow_view(request, username, *args, **kwargs):
+def user_follow_view(request, uid, *args, **kwargs):
     me = request.user
-    to_followed = User.objects.filter(username=username)
+    to_followed = User.objects.filter(pk=uid)
     action = request.data.get('action') or ''
     context = {}
-    if me.username == username:
+    if me.id == uid:
         context['followers_count'] = me.userprofile.followers.count()
         return Response(context, status=200)
     if not to_followed.exists():
@@ -55,3 +58,29 @@ def user_follow_view(request, username, *args, **kwargs):
         pass
     context['followers_count'] = profile.followers.count()
     return Response(context, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_is_follower(request, uid):
+    user = request.user
+    if user.id == uid:
+        return Response({'msg': 'self'}, status=200)
+    else:
+        profile = User.objects.filter(pk=uid).first().userprofile
+        print(profile.followers.all(), user)
+        if user in profile.followers.all():
+            return Response({'code': 1}, status=200)
+        else:
+            return Response({'code': -1}, status=200)
+
+
+class ChangProfileView(UpdateAPIView):
+    serializer_class = UserProfileUpdateSerializer
+    queryset = UserProfile.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.serializer_class(request.user.userprofile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=200)
