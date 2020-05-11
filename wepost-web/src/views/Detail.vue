@@ -1,7 +1,5 @@
 <template>
   <div class="detail-view container">
-    <p>aid:{{aid}}</p>
-    <p>{{user}}</p>
     <detail-post :isDetail="true" :article="article"></detail-post>
   </div>
 </template>

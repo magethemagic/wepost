@@ -1,5 +1,6 @@
 <template>
   <div class="register container">
+    <b-alert variant="danger" :show="msg.length > 0">{{msg}}</b-alert>
     <b-row>
       <main class="col col-xl-4 order-xl-2 col-lg-6 order-lg-1 col-md-8 col-sm-10 col-12 m-auto">
         <b-form @submit="onSubmit">
@@ -47,6 +48,12 @@
               v-model="form.password"
               required
             ></b-form-input>
+            <b-form-invalid-feedback :state="validation">
+              密码格式不正确
+            </b-form-invalid-feedback>
+            <b-form-valid-feedback :state="validation">
+              密码格式正确
+            </b-form-valid-feedback>
           </b-form-group>
 
           <b-form-group id="input-group-5" label="确认密码:" class="text-left" label-for="input-5">
@@ -57,6 +64,12 @@
               v-model="form.repassword"
               required
             ></b-form-input>
+            <b-form-invalid-feedback :state="checkpwd">
+              两次输入密码不一致.
+            </b-form-invalid-feedback>
+            <b-form-valid-feedback :state="checkpwd">
+              Looks Good.
+            </b-form-valid-feedback>
           </b-form-group>
 
           <b-button type="submit" variant="primary" > &emsp;&emsp;&emsp; 注册 &emsp;&emsp;&emsp; </b-button>
@@ -82,8 +95,17 @@ export default {
       msg: ''
     }
   },
+  computed: {
+    validation() {
+      const length = this.form.password.length
+      return length > 6 && length < 20
+    },
+    checkpwd() {
+      return this.form.password === this.form.repassword
+    }
+  },
   methods: {
-    onSubmit () {
+    onSubmit() {
       const self = this
       const data = new FormData()
       data.append('username', this.form.username)
@@ -97,10 +119,11 @@ export default {
         .then(
           response => {
             if (response.data.code === 1) {
-              self.$router.push('/user/login')
+              self.$router.push({name: 'Login'})
             }
           },
           error => {
+            self.msg = error.data
             console.log(error)
           }
         )

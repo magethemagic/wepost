@@ -46,7 +46,9 @@
                 </b-list-group-item>
               </b-list-group>
 
-              <b-dropdown-item href="#">Profile</b-dropdown-item>
+              <b-dropdown-item>
+                <router-link :to="{name:'Profile',query:{uid:userinfo.uid}}">Profile</router-link>
+              </b-dropdown-item>
               <b-dropdown-item @click="logout">Logout</b-dropdown-item>
             </b-nav-item-dropdown>
           </div>
@@ -85,11 +87,13 @@
   methods: {
     ...mapMutations('users', {
       setToken: 'setToken',
-      setUser: 'setUser'
+      setUser: 'setUser',
+      setUid: 'setUid'
     }),
     logout() {
       this.setToken('')
       this.setUser(null)
+      this.setUid(0)
       this.reload()
     },
     searchArticle() {

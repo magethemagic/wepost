@@ -13,10 +13,12 @@ class FollowRelation(models.Model):
 
 
 class UserProfile(models.Model):
+    GENDER_CHOICE = (('M', 'Male'), ('F', 'Female'))
+    gender = models.CharField(choices=GENDER_CHOICE, default='Male', max_length=7)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     tel = models.CharField(max_length=11, verbose_name='电话号码')
     desc = models.CharField(max_length=50, null=True, blank=True)
-    avatar = models.FileField(upload_to='media/avatar/%Y/%m/%d/')
+    avatar = models.FileField(upload_to='../media/avatar/%Y/%m/%d/')
     followers = models.ManyToManyField(User, related_name='following', blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 

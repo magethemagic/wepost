@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="userinfo" class="box mb-3 shadow-sm border rounded bg-white profile-box text-center">
+    <div v-if="uid > 0" class="box mb-3 shadow-sm border rounded bg-white profile-box text-center">
       <div class="py-4 px-3 border-bottom">
         <img class="img-fluid mt-2 rounded-circle" alt="Avatar"
              :src="userinfo.avatar">
@@ -12,7 +12,7 @@
       </div>
       <div class="d-flex">
         <div class="col-6 border-right p-3">
-          <h6 class="font-weight-bold text-dark mb-1">{{userinfo.followers_count ? userinfo.followers_count: 0}}</h6>
+          <h6 class="font-weight-bold text-dark mb-1">{{userinfo.follower_count ? userinfo.follower_count: 0}}</h6>
           <p class="mb-0 text-black-50 small">粉丝数</p>
         </div>
         <div class="col-6 p-3">
@@ -39,27 +39,45 @@
 </template>
 
 <script>
-import {mapGetters, mapActions} from 'vuex'
-export default {
-  name: 'UserAside',
-  data() {
-    return {
-      userinfo: Object,
-      username: 'nib'
-    }
-  },
-  created() {
-    this.userinfo = this.getUserInfo
-  },
-  mounted() {
-  },
-  methods: {
-    ...mapActions('users', {
-      getUserFromBackend: 'getUserFromBackend'
-    })
-  },
+  import apis from '@/apis'
+  import {mapGetters, mapActions} from 'vuex'
+
+  export default {
+    name: 'UserAside',
+    data() {
+      return {
+        userinfo: Object,
+        username: 'nib',
+        uid: 0
+      }
+    },
+    created() {
+      this.uid = localStorage.getItem('uid')
+    },
+    mounted() {
+      const uid = localStorage.getItem('uid')
+      if (uid && uid > 0) {
+        this.getUserProfile(uid)
+      }
+    },
+    methods: {
+      ...mapActions('users', {
+        getUserFromBackend: 'getUserFromBackend'
+      }),
+      getUserProfile(uid) {
+        const self = this
+        apis.getUserDetail({uid: uid}).then(
+          user => {
+            console.log(user.data)
+            self.userinfo = user.data
+          }
+        ).catch(usererr => {
+          alert(usererr.data)
+        })
+      }
+    },
   computed: {
-    ...mapGetters('users', {getUserInfo: 'getUserInfo'})
+    ...mapGetters('users', {getUid: 'getUid'})
   }
 }
 </script>

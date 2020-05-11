@@ -91,14 +91,12 @@
         likes_count: 0,
         isLike: false,
         errmsg: '',
-        content: '',
-        comment_list: []
+        content: ''
       }
     },
     created() {
       this.likes_count = this.article.likes_count
-      this.comment_list = this.article.comments
-      console.log(this.article)
+      // console.log(this.article)
     },
     mounted() {
 
@@ -147,16 +145,14 @@
             tid: tid
           }
         })
-    }
-  },
-  watch: {
-
-  },
-  filters: {
-    formatDate: function (time) {
-      if (time != null && time !== '') {
-        const date = formatTimeToStr(time)
-        return moment(date).fromNow()
+      }
+    },
+    watch: {},
+    filters: {
+      formatDate: function (time) {
+        if (time != null && time !== '') {
+          const date = formatTimeToStr(time)
+          return moment(date).fromNow()
       } else {
         return ''
       }
