@@ -54,6 +54,11 @@ const routes = [
     path: '/user/forgetpwd',
     name: 'ForgetPwd',
     component: () => import('../views/ForgetPwd.vue')
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: () => import('../views/NotFound.vue')
   }
 ]
 
