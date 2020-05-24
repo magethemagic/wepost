@@ -17,6 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, re_path, include  # url()
+from django.views.generic import TemplateView
 from django.views.static import serve
 
 from article.views import home_view
@@ -29,7 +30,8 @@ urlpatterns = [
     path('api/articles/', include(('article.urls', 'article'), namespace='article')),
     path('api/user/', include(('account.urls', 'account'), namespace='user')),
     path('api/profile/', include(('userprofile.urls', 'userprofile'), namespace='profile')),
-    path('api/hotsearch', hot_search_list)
+    path('api/hotsearch', hot_search_list),
+    re_path(r'.*', TemplateView.as_view(template_name='index.html'))
 ]
 
 if settings.DEBUG:
