@@ -12,7 +12,18 @@ class User(AbstractUser):
         verbose_name_plural = verbose_name
 
 
-# class UserFollow(models.Model):
-#     idol = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='idols')
-#     fan = models.ForeignKey('User', on_delete=models.CASCADE, related_name='fans')
-#     timestamp = models.DateTimeField(auto_now_add=True)
+class EmailValidateModel(models.Model):
+    timestamp = models.DateField(verbose_name=u'添加时间', auto_now=True)
+    email = models.EmailField(verbose_name=u'邮箱')
+    validate_code = models.CharField(max_length=20, verbose_name=u'验证码')
+
+    # 新加send_type类型
+    send_type = models.CharField(max_length=50, verbose_name=u'类型',
+                                 choices=(('register', u'注册'), ('forgetpwd', u'忘记密码')), default='register')
+
+    class Meta:
+        verbose_name = u'邮箱验证码信息'
+        verbose_name_plural = verbose_name
+
+    def __unicode__(self):
+        return self.email

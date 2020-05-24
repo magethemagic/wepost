@@ -153,12 +153,12 @@
         if (time != null && time !== '') {
           const date = formatTimeToStr(time)
           return moment(date).fromNow()
-      } else {
-        return ''
+        } else {
+          return ''
+        }
       }
     }
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

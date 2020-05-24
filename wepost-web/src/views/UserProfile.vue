@@ -11,10 +11,11 @@
             <p>{{userinfo.username}}</p>
             <div class="d-flex">
               <b-avatar class="mr-3" :src="userinfo.avatar" size="4rem"></b-avatar>
+              <p>{{userinfo.desc}}</p>
             </div>
           </div>
         </template>
-        <b-button class="ml-auto pl-5 pr-5" :variant="followinfo ==='Follow'? `primary`: `danger`"
+        <b-button class="ml-auto pl-5 pr-5" :variant="followinfo ==='Follow'? `primary`: ``"
                   @click.prevent="followUser">{{followinfo}}
         </b-button>
       </b-jumbotron>

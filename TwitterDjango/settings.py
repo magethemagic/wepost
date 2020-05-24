@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     # internal
     'article',
     'account',
-    'userprofile'
+    'userprofile',
+    'hotsearch'
 ]
 
 MIDDLEWARE = [
@@ -125,9 +126,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-cn'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -195,3 +196,14 @@ REST_FRAMEWORK = {
 }
 
 MAX_BLOG_LENGTH = 140
+
+EMAIL_USE_TLS = False  # 是否使用TLS安全传输协议(用于在两个通信应用程序之间提供保密性和数据完整性。)
+EMAIL_HOST = 'smtp.163.com'  # 发送邮件的邮箱 的 SMTP服务器，这里用了163邮箱
+EMAIL_PORT = 25  # 发件箱的SMTP服务器端口
+EMAIL_HOST_USER = 'studentcool123@163.com'  # 发送邮件的邮箱地址
+# '1470526115@qq.com'
+
+EMAIL_HOST_PASSWORD = 'CSCJWQHYVOFERYCA'  # 发送邮件的邮箱密码(这里使用的是授权码)
+# 'ruyofenlvvhibadh'
+
+EMAIL_FROM = 'studentcool123@163.com'  # 收件人看到的发件人

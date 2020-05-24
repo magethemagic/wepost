@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from django.db.models import Q
@@ -12,12 +13,12 @@ from rest_framework.response import Response
 from rest_framework import filters
 from rest_framework.views import APIView
 
-
-from article.models import Article, Comment
+from article.models import Article, Comment, Tag, ArticleTags
 from article.serializers import (ArticleSerializer,
                                  ArticleActionSerializer,
                                  ArticleCreateSerializer,
-                                 ArticlePagination, CommentCreateSerializer, CommentSerializer)
+                                 ArticlePagination, CommentCreateSerializer, CommentSerializer, TagSerializer)
+from hotsearch.views import judge, update
 
 
 def home_view(request):
@@ -44,6 +45,8 @@ def articles_list_view(request, *args, **kwargs):
         serializer = ArticleSerializer(page_obj, many=True)
         return paginate.get_paginated_response(serializer.data)
     if search is not None:
+        judge(search)
+        update()
         queryset2 = queryset.filter(Q(user__username__icontains=search) | Q(content__icontains=search))
         page_obj = paginate.paginate_queryset(queryset2, request)
         serializer = ArticleSerializer(page_obj, many=True)
@@ -66,6 +69,7 @@ def articles_detail_view(request, article_id, *args, **kwargs):
 @permission_classes([IsAuthenticated])
 def articles_create_view(request, *args, **kwargs):
     serializer = ArticleCreateSerializer(data=request.POST)
+    file = request.FILES.get('image', None)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user)
         aid = serializer.data.get('id')
@@ -131,3 +135,21 @@ def comment_create_view(request, *args, **kwargs):
         aid = serializer.data.get('id')
         serializer = CommentSerializer(Comment.objects.get(pk=aid))
         return Response(serializer.data, status=201)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def tag_create_view(request, *args, **kwargs):
+    tags = json.loads(request.POST.get('tags'))
+    aid = request.POST.get('aid')
+    article = Article.objects.filter(pk=aid)
+    if not article or not tags:
+        return Response({'msg': 'no tags or article found'}, status=200)
+    article = article.first()
+    for tag in tags:
+        tag_ = Tag.objects.filter(name=tag).first()
+        if not tag_:
+            tag_ = Tag.objects.create(name=tag)
+        article.tags.add(tag_)
+    serializer = ArticleSerializer(article)
+    return Response(serializer.data, status=200)

@@ -67,23 +67,23 @@
 </template>
 
 <script>
-  import {mapMutations, mapGetters} from 'vuex'
+import {mapMutations, mapGetters} from 'vuex'
 
-  export default {
-    name: 'NavBar',
-    inject: ['reload'],
-    props: {
-      isLogin: Boolean
-    },
-    data() {
-      return {
-        userinfo: Object,
-        search: ''
-      }
-    },
-    created() {
-      this.userinfo = this.getUserInfo
-    },
+export default {
+  name: 'NavBar',
+  inject: ['reload'],
+  props: {
+    isLogin: Boolean
+  },
+  data() {
+    return {
+      userinfo: Object,
+      search: ''
+    }
+  },
+  created() {
+    this.userinfo = this.getUserInfo
+  },
   methods: {
     ...mapMutations('users', {
       setToken: 'setToken',
@@ -91,10 +91,10 @@
       setUid: 'setUid'
     }),
     logout() {
+      this.reload()
       this.setToken('')
       this.setUser(null)
       this.setUid(0)
-      this.reload()
     },
     searchArticle() {
       this.reload()

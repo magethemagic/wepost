@@ -74,12 +74,20 @@
         ).catch(usererr => {
           alert(usererr.data)
         })
+      },
+      getUserInfo() {
+        this.$router.push({
+          name: 'Profile',
+          query: {
+            uid: this.uid
+          }
+        })
       }
     },
-  computed: {
-    ...mapGetters('users', {getUid: 'getUid'})
+    computed: {
+      ...mapGetters('users', {getUid: 'getUid'})
+    }
   }
-}
 </script>
 
 <style scoped>

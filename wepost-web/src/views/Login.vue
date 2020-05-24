@@ -34,8 +34,7 @@
           <b-button type="reset" variant="danger">Reset</b-button>
         </b-form >
         <div>
-          <router-link to="/user/retrieve">忘记密码</router-link>
-          {{ }}
+          <router-link to="/user/forgetpwd">忘记密码</router-link>
           <router-link to="/user/register">还没有账号？注册</router-link>
         </div>
       </main>

@@ -20,6 +20,7 @@ from django.urls import path, re_path, include  # url()
 from django.views.static import serve
 
 from article.views import home_view
+from hotsearch.views import hot_search_list
 
 urlpatterns = [
     path('', home_view, name='home'),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('api/articles/', include(('article.urls', 'article'), namespace='article')),
     path('api/user/', include(('account.urls', 'account'), namespace='user')),
     path('api/profile/', include(('userprofile.urls', 'userprofile'), namespace='profile')),
+    path('api/hotsearch', hot_search_list)
 ]
 
 if settings.DEBUG:
