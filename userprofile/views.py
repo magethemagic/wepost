@@ -75,6 +75,15 @@ def get_is_follower(request, uid):
             return Response({'code': -1}, status=200)
 
 
+@api_view(['GET'])
+def get_familiar_user(request, uid, *args, **kwargs):
+    userquery = User.objects.filter(pk=uid).first()
+    familiar_user = userquery.userprofile.followers.count()
+    print(familiar_user)
+    serializer = UserProfileSerializer(familiar_user, many=True)
+    return Response(serializer.data, status=200)
+
+
 class ChangProfileView(UpdateAPIView):
     serializer_class = UserProfileUpdateSerializer
     queryset = UserProfile.objects.all()

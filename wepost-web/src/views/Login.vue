@@ -62,7 +62,7 @@ export default {
       show: true
     }
   },
-  updated() {
+  watch() {
     if (this.getIsLogin) this.$router.push('/')
   },
   methods: {
