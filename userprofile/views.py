@@ -78,9 +78,12 @@ def get_is_follower(request, uid):
 @api_view(['GET'])
 def get_familiar_user(request, uid, *args, **kwargs):
     userquery = User.objects.filter(pk=uid).first()
-    familiar_user = userquery.userprofile.followers.count()
+    familiar_user = userquery.userprofile.followers.all()
     print(familiar_user)
-    serializer = UserProfileSerializer(familiar_user, many=True)
+    qs = []
+    for familiar in familiar_user:
+        qs.append(familiar.userprofile)
+    serializer = UserProfileSerializer(qs, many=True)
     return Response(serializer.data, status=200)
 
 

@@ -23,6 +23,13 @@
       <b-row>
         <b-col class="col col-xl-3 order-xl-2 col-lg-6 order-lg-2 col-md-6 col-sm-6 col-12">
           <p>相似的用户：</p>
+          <b-list-group v-for="familiaruser in familiar_user" :key="familiaruser.uid">
+            <b-list-group-item class="d-flex align-items-center"
+            @click.prevent="viewUser(familiaruser.uid)" href="#">
+                  <b-avatar class="mr-3" :src="familiaruser.avatar"></b-avatar>
+                  <span class="mr-auto">{{familiaruser.username}}</span>
+                </b-list-group-item>
+          </b-list-group>
         </b-col>
         <b-col class="col col-xl-8 order-xl-1 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
           <user-post :params="params"></user-post>
@@ -35,65 +42,86 @@
 </template>
 
 <script>
-  import BaseArticleList from '@/components/BaseArticleList'
-  import apis from '@/apis'
+import BaseArticleList from '@/components/BaseArticleList'
+import apis from '@/apis'
 
-  export default {
-    name: 'UserProfile',
-    components: {
-      'user-post': BaseArticleList
+export default {
+  name: 'UserProfile',
+  inject: ['reload'],
+  components: {
+    'user-post': BaseArticleList
+  },
+  data () {
+    return {
+      params: {},
+      userinfo: {},
+      followinfo: 'Follow',
+      familiar_user: []
+    }
+  },
+  created () {
+    this.params = {
+      uid: this.$route.query.uid
+    }
+    this.getUserProfile(this.$route.query.uid)
+    this.getFollowstatus(this.$route.query.uid)
+    this.getFamiliarUser(this.$route.query.uid)
+  },
+  methods: {
+    getUserProfile (uid) {
+      const self = this
+      apis.getUserDetail({ uid: uid }).then(
+        user => {
+          self.userinfo = user.data
+        }
+      ).catch(usererr => {
+        alert(usererr.data)
+      })
     },
-    data() {
-      return {
-        params: {},
-        userinfo: {},
-        followinfo: 'Follow'
-      }
+    getFollowstatus (uid) {
+      const self = this
+      this.$axios.get('profile/' + uid + '/isfollow').then(res => {
+        console.log(res.data)
+        if (res.data.code === 1) {
+          self.followinfo = 'Unfollow'
+        } else if (res.data.code === -1) {
+          self.followinfo = 'Follow'
+        } else {
+          self.userinfo = ''
+        }
+      })
     },
-    created() {
-      this.params = {
-        uid: this.$route.query.uid
-      }
-      this.getUserProfile(this.$route.query.uid)
-      this.getFollowstatus(this.$route.query.uid)
+    followUser () {
+      const uid = this.$route.query.uid
+      const self = this
+      const data = new FormData()
+      data.append('action', this.followinfo.toLowerCase())
+      this.$axios.post('profile/' + uid + '/follow', data).then(res => {
+        self.userinfo.follower_count = res.data.followers_count
+        if (self.followinfo === 'Follow') self.followinfo = 'Unfollow'
+        else self.followinfo = 'Follow'
+      })
     },
-    methods: {
-      getUserProfile(uid) {
-        const self = this
-        apis.getUserDetail({uid: uid}).then(
-          user => {
-            self.userinfo = user.data
-          }
-        ).catch(usererr => {
-          alert(usererr.data)
-        })
-      },
-      getFollowstatus(uid) {
-        const self = this
-        this.$axios.get('profile/' + uid + '/isfollow').then(res => {
-          console.log(res.data)
-          if (res.data.code === 1) {
-            self.followinfo = 'Unfollow'
-          } else if (res.data.code === -1) {
-            self.followinfo = 'Follow'
-          } else {
-            self.userinfo = ''
-          }
-        })
-      },
-      followUser() {
-        const uid = this.$route.query.uid
-        const self = this
-        const data = new FormData()
-        data.append('action', this.followinfo.toLowerCase())
-        this.$axios.post('profile/' + uid + '/follow', data).then(res => {
-          self.userinfo.follower_count = res.data.followers_count
-          if (self.followinfo === 'Follow') self.followinfo = 'Unfollow'
-          else self.followinfo = 'Follow'
-        })
-      }
+    getFamiliarUser (uid) {
+      const self = this
+      this.$axios.get('profile/' + uid + '/familiar').then(res => {
+        console.log(res.data)
+        self.familiar_user = res.data
+      }, error => {
+        alert(error.data)
+      })
+    },
+    viewUser (uid) {
+      this.reload()
+      this.$router.push({
+        name: 'Profile',
+        query: {
+          uid: uid
+        }
+      })
     }
   }
+}
 </script>
 
 <style scoped>

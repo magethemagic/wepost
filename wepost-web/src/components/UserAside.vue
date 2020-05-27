@@ -39,55 +39,55 @@
 </template>
 
 <script>
-  import apis from '@/apis'
-  import {mapGetters, mapActions} from 'vuex'
+import apis from '@/apis'
+import { mapGetters, mapActions } from 'vuex'
 
-  export default {
-    name: 'UserAside',
-    data() {
-      return {
-        userinfo: Object,
-        username: 'nib',
-        uid: 0
-      }
-    },
-    created() {
-      this.uid = localStorage.getItem('uid')
-    },
-    mounted() {
-      const uid = localStorage.getItem('uid')
-      if (uid && uid > 0) {
-        this.getUserProfile(uid)
-      }
-    },
-    methods: {
-      ...mapActions('users', {
-        getUserFromBackend: 'getUserFromBackend'
-      }),
-      getUserProfile(uid) {
-        const self = this
-        apis.getUserDetail({uid: uid}).then(
-          user => {
-            console.log(user.data)
-            self.userinfo = user.data
-          }
-        ).catch(usererr => {
-          alert(usererr.data)
-        })
-      },
-      getUserInfo() {
-        this.$router.push({
-          name: 'Profile',
-          query: {
-            uid: this.uid
-          }
-        })
-      }
-    },
-    computed: {
-      ...mapGetters('users', {getUid: 'getUid'})
+export default {
+  name: 'UserAside',
+  data () {
+    return {
+      userinfo: Object,
+      username: 'nib',
+      uid: 0
     }
+  },
+  created () {
+    this.uid = localStorage.getItem('uid')
+  },
+  mounted () {
+    const uid = localStorage.getItem('uid')
+    if (uid && uid > 0) {
+      this.getUserProfile(uid)
+    }
+  },
+  methods: {
+    ...mapActions('users', {
+      getUserFromBackend: 'getUserFromBackend'
+    }),
+    getUserProfile (uid) {
+      const self = this
+      apis.getUserDetail({ uid: uid }).then(
+        user => {
+          console.log(user.data)
+          self.userinfo = user.data
+        }
+      ).catch(usererr => {
+        alert(usererr.data)
+      })
+    },
+    getUserInfo () {
+      this.$router.push({
+        name: 'Profile',
+        query: {
+          uid: this.uid
+        }
+      })
+    }
+  },
+  computed: {
+    ...mapGetters('users', { getUid: 'getUid' })
   }
+}
 </script>
 
 <style scoped>
