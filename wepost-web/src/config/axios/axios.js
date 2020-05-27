@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 
-axios.defaults.baseURL = 'http://49.235.4.21:8000/api/'
+axios.defaults.baseURL = 'http://49.235.4.21/api/'
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 axios.defaults.headers = {
