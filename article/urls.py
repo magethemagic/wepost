@@ -5,7 +5,7 @@ from .views import (articles_list_view,
                     articles_create_view,
                     articles_delete_view,
                     articles_action_view,
-                    comment_create_view, ArticleListApiView, tag_create_view)
+                    comment_create_view, ArticleListApiView)
 
 urlpatterns = [
     path('list/', ArticleListApiView.as_view(), name='list'),
@@ -14,6 +14,5 @@ urlpatterns = [
     path('<int:article_id>/delete/', articles_delete_view, name='delete'),
     path('<int:article_id>/', articles_detail_view, name='list'),
     path('action/', articles_action_view, name='action'),
-    path('comments/create/', comment_create_view, name='comment_create'),
-    path('tags/create/', tag_create_view)
+    path('comments/create/', comment_create_view, name='comment_create')
 ]

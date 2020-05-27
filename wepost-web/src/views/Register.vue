@@ -46,6 +46,7 @@
               type="password"
               id="input-4"
               v-model="form.password"
+              autocomplete="new-password"
               required
             ></b-form-input>
             <b-form-invalid-feedback :state="validation">
@@ -60,7 +61,7 @@
             <b-form-input
               id="input-5"
               type="password"
-
+              autocomplete="new-password"
               v-model="form.repassword"
               required
             ></b-form-input>
@@ -83,7 +84,8 @@
 <script>
 export default {
   name: 'Register',
-  data () {
+  inject: ['reload'],
+  data() {
     return {
       form: {
         username: '',
@@ -113,18 +115,16 @@ export default {
       data.append('phone_number', this.form.tel)
       data.append('password', this.form.password)
       this.$axios
-        .post('/user/register/', data, {
-          headers: {}
-        })
+        .post('/user/register/', data)
         .then(
           response => {
+            this.reload()
             if (response.data.code === 1) {
               self.$router.push({name: 'Login'})
-            }
+            } else alert(response.data.msg)
           },
           error => {
-            self.msg = error.data
-            console.log(error)
+            alert(error.data)
           }
         )
     }

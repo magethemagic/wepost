@@ -44,7 +44,7 @@ def user_register(request):
         email = rform.cleaned_data.get('email')
         password = rform.cleaned_data.get('password')
         if not User.objects.filter(
-                Q(username=username) | Q(email=email)).exists():
+                Q(username=username) | Q(email=email)):
             password = make_password(password)
             user = User.objects.create(username=username, email=email,
                                        password=password)
@@ -91,20 +91,19 @@ def send_email(email, send_type='register'):
     code = generate_random_str(4)
     if send_type == 'register':
         email_title = 'WePost注册链接'
-        email_body = '请点击下面的连接激活你的账号: http://127.0.0.1:8080/user/register/{0}'.format(code)
+        email_body = '请点击下面的连接激活你的账号: http://127.0.0.1:8000/user/register/{0}'.format(code)
     else:
         email_title = 'WePost重置密码链接'
-        email_body = '请点击下面的连接修改你的密码: http://127.0.0.1:8080/user/resetpwd?code={0}'.format(code)
+        email_body = '请点击下面的连接修改你的密码: http://127.0.0.1:8000/user/resetpwd?code={0}'.format(code)
 
     send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])
     # 如果成功保存到数据库
     if send_status:
-        model = EmailValidateModel.objects.update_or_create(
+        EmailValidateModel.objects.update_or_create(
             email=email,
             validate_code=code,
             send_type=send_type
         )
-        model.save()
     return send_status
 
 

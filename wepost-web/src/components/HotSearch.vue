@@ -1,16 +1,17 @@
 <template>
   <div class="hot-search ">
-    <b-card class="mb-3 container col col-5  shadow-sm rounded">
-      <b-list-group flush class="text-left">
-        <b-list-group-item
-          class="d-flex  justify-content-between align-items-center"
-          v-for="(item,index) in HotsearchList" :key="item.id">
-          {{index+1}}&nbsp;&emsp;{{item.key_content}}
-          <b-badge variant="primary" pill>{{item.count}}</b-badge>
-          <a href="#" @click.prevent="viewSearch(item.key_content)">View</a>
-        </b-list-group-item>
-      </b-list-group>
-    </b-card>
+
+    <b-list-group class="text-left rounded box shadow-sm mb-3">
+      <b-list-group-item
+        v-for="(item,index) in HotsearchList" :key="item.id">
+        <div class="d-flex">
+          <p class="text-danger mr-4 font-weight-bold">{{index+1}}</p>&emsp;
+          <a href="#" @click.prevent="viewSearch(item.key_content)">{{item.key_content}}</a>
+          <p class="ml-3 text-muted">{{item.count}}</p>
+        </div>
+      </b-list-group-item>
+    </b-list-group>
+
   </div>
 </template>
 

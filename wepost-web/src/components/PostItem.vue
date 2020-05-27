@@ -19,7 +19,8 @@
       </template>
       <b-card-text><a href="#" @click.prevent="viewArticle(article.id)">
         {{article.content}}</a>
-        <a href="javascript:void(0)" @click="handleTagClick(tag.id)" v-for="tag in article.tags" :key="tag.id">#{{tag.name}}#</a>
+        <a id="article-tag" href="javascript:void(0)" @click="handleTagClick(tag.name)" v-for="tag in article.tags"
+           :key="tag.id">#{{tag.name}}#</a>
       </b-card-text>
 
       <b-card class="text-left font-weight-bold" v-if="article.parent !== null">
@@ -139,10 +140,11 @@
         )
       },
       handleTagClick(tid) {
+        this.reload()
         this.$router.push({
           name: 'Search',
           query: {
-            tid: tid
+            search: tid
           }
         })
       }
@@ -180,6 +182,10 @@ li {
 a, a:focus, a:hover {
   color: #333;
   text-decoration: none;
+}
+
+#article-tag {
+  color: #66ccff;
 }
 
 header, footer {

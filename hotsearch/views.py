@@ -27,7 +27,7 @@ def judge(search_key):
             key.count += 1
         key.save()
     else:
-        SearchKey.objects.create(key_content=search_key).save()
+        SearchKey.objects.create(key_content=search_key, count=1).save()
 
 
 def update():

@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 
 from django.db.models import Q
@@ -13,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework import filters
 from rest_framework.views import APIView
 
+from article import S3Manager
 from article.models import Article, Comment, Tag, ArticleTags
 from article.serializers import (ArticleSerializer,
                                  ArticleActionSerializer,
@@ -47,7 +49,8 @@ def articles_list_view(request, *args, **kwargs):
     if search is not None:
         judge(search)
         update()
-        queryset2 = queryset.filter(Q(user__username__icontains=search) | Q(content__icontains=search))
+        queryset2 = queryset.filter(
+            Q(tags__name__icontains=search) | Q(user__username__icontains=search) | Q(content__icontains=search))
         page_obj = paginate.paginate_queryset(queryset2, request)
         serializer = ArticleSerializer(page_obj, many=True)
         return paginate.get_paginated_response(serializer.data)
@@ -65,14 +68,26 @@ def articles_detail_view(request, article_id, *args, **kwargs):
     return Response(serializer.data, status=200)
 
 
+def crop_image(file, uid):
+    # 随机生成新的图片名，自定义路径。
+    ext = file.name.split('.')[-1]
+    file_name = '{}.{}'.format(uid.uuid4().hex[:10], ext)
+    cropped_avatar = os.path.join(uid, "avatar", file_name)
+    return cropped_avatar
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def articles_create_view(request, *args, **kwargs):
     serializer = ArticleCreateSerializer(data=request.POST)
+    tags = request.POST.get('tags', None)
     file = request.FILES.get('image', None)
+    if file:
+        S3Manager.upload_file(file)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user)
         aid = serializer.data.get('id')
+        tag_create(tags, Article.objects.get(pk=aid))
         serializer = ArticleSerializer(Article.objects.get(pk=aid))
         return Response(serializer.data, status=201)
 
@@ -137,19 +152,11 @@ def comment_create_view(request, *args, **kwargs):
         return Response(serializer.data, status=201)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def tag_create_view(request, *args, **kwargs):
-    tags = json.loads(request.POST.get('tags'))
-    aid = request.POST.get('aid')
-    article = Article.objects.filter(pk=aid)
-    if not article or not tags:
-        return Response({'msg': 'no tags or article found'}, status=200)
-    article = article.first()
-    for tag in tags:
+def tag_create(tags, article):
+    tags_ = tags.split(',')
+    print(tags_)
+    for tag in tags_:
         tag_ = Tag.objects.filter(name=tag).first()
         if not tag_:
             tag_ = Tag.objects.create(name=tag)
         article.tags.add(tag_)
-    serializer = ArticleSerializer(article)
-    return Response(serializer.data, status=200)

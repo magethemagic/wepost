@@ -91,10 +91,10 @@ export default {
       setUid: 'setUid'
     }),
     logout() {
-      this.reload()
       this.setToken('')
       this.setUser(null)
       this.setUid(0)
+      window.location.reload()
     },
     searchArticle() {
       this.reload()

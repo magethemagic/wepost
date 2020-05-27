@@ -49,6 +49,7 @@ export default {
       const data = new FormData()
       data.append('content', this.content)
       data.append('tags', this.tags)
+      console.log(this.tags)
       this.$axios.post('/articles/create/', data).then(
         response => {
           this.addArticle(response.data)
