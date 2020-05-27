@@ -100,6 +100,8 @@ export default {
         self.userinfo.follower_count = res.data.followers_count
         if (self.followinfo === 'Follow') self.followinfo = 'Unfollow'
         else self.followinfo = 'Follow'
+      }, error => {
+        alert(error.data.detail)
       })
     },
     getFamiliarUser (uid) {

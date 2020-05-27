@@ -1,9 +1,9 @@
 <template>
   <div class="hot-search ">
-
     <b-list-group class="text-left rounded box shadow-sm mb-3">
-      <b-list-group-item
-        v-for="(item,index) in HotsearchList" :key="item.id">
+      <b-list-group-item class="text-left">热搜词排名：</b-list-group-item>
+      <b-list-group-item class="list-item"
+                         v-for="(item,index) in HotsearchList" :key="item.id">
         <div class="d-flex">
           <p class="text-danger mr-4 font-weight-bold">{{index+1}}</p>&emsp;
           <a href="#" @click.prevent="viewSearch(item.key_content)">{{item.key_content}}</a>
@@ -46,5 +46,9 @@
 <style scoped>
   .hot-search {
     position: relative;
+  }
+
+  .list-item {
+    max-height: 48px;
   }
 </style>

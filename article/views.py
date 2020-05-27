@@ -50,7 +50,8 @@ def articles_list_view(request, *args, **kwargs):
         judge(search)
         update()
         queryset2 = queryset.filter(
-            Q(tags__name__icontains=search) | Q(user__username__icontains=search) | Q(content__icontains=search))
+            Q(tags__name__icontains=search) | Q(user__username__icontains=search) | Q(
+                content__icontains=search)).distinct()
         page_obj = paginate.paginate_queryset(queryset2, request)
         serializer = ArticleSerializer(page_obj, many=True)
         return paginate.get_paginated_response(serializer.data)
@@ -115,7 +116,7 @@ def articles_action_view(request, *args, **kwargs):
         data = serializer.validated_data
         article_id = data.get('id')
         action = data.get('action')
-        content = data.get('content') if data.get('content') else ""
+        content = data.get('content') if data.get('content') else "转发"
         qs = Article.objects.filter(id=article_id)
         if not qs.exists():
             return Response({}, status=404)
