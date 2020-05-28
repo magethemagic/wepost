@@ -91,18 +91,20 @@ WSGI_APPLICATION = 'TwitterDjango.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 MYSQL_DATABASE = {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'blog',
-    'USER': 'root',
-    'PASSWORD': 'root',
-    'HOST': 'localhost',
+    'NAME': 'wepostdb',
+    'USER': 'admin',
+    'PASSWORD': '12345678',
+    'HOST': 'database-1.c2psahf6tsy3.ap-southeast-1.rds.amazonaws.com',
     'PORT': 3306
 }
+SQLITE3_DATABASE = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': os.path.join(BASE_DIR, 'data.sqlite3'),
+}
+
 DATABASES = {
-    'default':
-        {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'data.sqlite3'),
-        }
+    'default': MYSQL_DATABASE
+
 }
 
 # Password validation
