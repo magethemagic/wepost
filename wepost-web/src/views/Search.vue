@@ -27,8 +27,8 @@
         search: this.$route.query.search
       }
     },
-  methods: {}
-}
+    methods: {}
+  }
 </script>
 
 <style>

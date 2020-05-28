@@ -16,31 +16,31 @@
 </template>
 
 <script>
-  export default {
-    name: 'HotSearch',
-    inject: ['reload'],
-    data() {
-      return {
-        HotsearchList: []
-      }
+export default {
+  name: 'HotSearch',
+  inject: ['reload'],
+  data() {
+    return {
+      HotsearchList: []
+    }
+  },
+  mounted() {
+    this.getHotSearchList()
+  },
+  methods: {
+    getHotSearchList() {
+      const self = this
+      this.$axios.get('/hotsearch').then(res => {
+        console.log(res)
+        self.HotsearchList = res.data
+      })
     },
-    mounted() {
-      this.getHotSearchList()
-    },
-    methods: {
-      getHotSearchList() {
-        const self = this
-        this.$axios.get('/hotsearch').then(res => {
-          console.log(res)
-          self.HotsearchList = res.data
-        })
-      },
-      viewSearch(search) {
-        this.reload()
-        this.$router.push({name: 'Search', query: {search: search}})
-      }
+    viewSearch(search) {
+      this.reload()
+      this.$router.push({name: 'Search', query: {search: search}})
     }
   }
+}
 </script>
 
 <style scoped>

@@ -18,5 +18,11 @@
         <property name="serverTimezone" value="UTC" />
       </driver-properties>
     </data-source>
+    <data-source source="LOCAL" name="@database-1.c2psahf6tsy3.ap-southeast-1.rds.amazonaws.com" uuid="5c5d8088-6cf6-461a-be3f-1cf292a697b7">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://database-1.c2psahf6tsy3.ap-southeast-1.rds.amazonaws.com:3306</jdbc-url>
+    </data-source>
   </component>
 </project>

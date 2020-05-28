@@ -1,7 +1,5 @@
 import axios from '@/config/axios/axios'
 
-const host = 'http://localhost:8000/api/'
-
 function BackendLookup(method, endpoint, params, data) {
   let JsonData
   if (data) {
@@ -9,7 +7,7 @@ function BackendLookup(method, endpoint, params, data) {
   }
   return axios({
     method: method,
-    url: `${host}${endpoint}`,
+    url: `${endpoint}`,
     headers: {
       'Content-Type': 'application/json'
     },
