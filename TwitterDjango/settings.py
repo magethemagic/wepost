@@ -99,7 +99,7 @@ MYSQL_DATABASE = {
 }
 SQLITE3_DATABASE = {
     'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(BASE_DIR, 'data.sqlite3'),
+    'NAME': os.path.join(BASE_DIR, 'dataK.sqlite3'),
 }
 
 DATABASES = {
